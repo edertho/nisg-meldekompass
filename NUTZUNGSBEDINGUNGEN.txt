@@ -1,0 +1,16 @@
+NISG 2026 MeldeKompass – Nutzungsbedingungen
+============================================
+Der NISG 2026 MeldeKompass wird kostenlos zur Verfügung gestellt. Jede Person und jede
+Organisation darf ihn nutzen, auch gewerblich und ohne Registrierung.
+- Die Datei darf unverändert und unentgeltlich weitergegeben werden, zusammen mit diesem
+  LIESMICH.
+- Änderungen am Werkzeug, Umbenennung, Verkauf und das Entfernen der Urheber- und
+  Haftungshinweise sind ohne vorherige Zustimmung des Rechteinhabers nicht gestattet.
+- Daten, die mit dem Werkzeug erfasst werden, gehören der nutzenden Einrichtung.
+- Die Nutzung erfolgt ohne Gewährleistung und auf eigene Verantwortung. Eine Haftung für
+  Schäden aus der Nutzung ist ausgeschlossen, soweit das gesetzlich zulässig ist.
+- Das Werkzeug ist eine Orientierungshilfe und ersetzt weder Rechtsberatung noch die
+  Prüfung des Einzelfalls.
+- Rechteinhaber ist Thomas Eder.
+
+Version 1.0.0, Stand 10.10.2026. © 2026 Thomas Eder
