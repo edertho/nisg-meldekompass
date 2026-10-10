@@ -4,6 +4,8 @@ Der NISG 2026 MeldeKompass prüft Schritt für Schritt, ob ein Cybersicherheitsv
 
 Das Werkzeug ist eine einzelne HTML-Datei. Es läuft vollständig lokal im Browser und sendet keine Daten.
 
+**Kein Angebot einer Behörde.** Dieses Projekt und die Website sind kein Angebot einer Behörde und keine amtliche Information. Der MeldeKompass nimmt keine Meldungen entgegen und leitet keine weiter. Erhebliche Cybersicherheitsvorfälle sind über die offiziellen Kanäle zu melden: über das [NIS-Meldeportal](https://nim.services.usp.gv.at/at.gv.brz.nis2-public-p/nis2gvat/incidentsOverview/) im Unternehmensserviceportal an das zuständige CSIRT (§ 34 Abs. 1 NISG 2026). Maßgeblich sind die Rechtsvorschriften und die Angaben des [Bundesamts für Cybersicherheit](https://www.bundesamt-cybersicherheit.gv.at/303/meldepflicht-und-fristen.html).
+
 - Website mit Funktionsübersicht: https://nisg-meldekompass.at
 - Aktuelle Version herunterladen: https://nisg-meldekompass.at/download
 - Alle Versionen: https://github.com/edertho/nisg-meldekompass/releases
