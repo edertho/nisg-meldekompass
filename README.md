@@ -8,9 +8,10 @@ Das Werkzeug ist eine einzelne HTML-Datei. Es läuft vollständig lokal im Brows
 
 - Website mit Funktionsübersicht: https://nisg-meldekompass.at
 - Aktuelle Version herunterladen: https://nisg-meldekompass.at/download
+- Online ausprobieren, ohne Download: https://nisg-meldekompass.at/demo/
 - Alle Versionen: https://github.com/edertho/nisg-meldekompass/releases
 
-Aktuelle Version 1.1.0 vom 12.10.2026.
+Aktuelle Version 1.1.1 vom 18.10.2026.
 
 ## Verwenden
 
@@ -22,7 +23,7 @@ Näheres steht im `LIESMICH.txt`, das im ZIP liegt.
 
 ## Inhalt dieses Repositorys
 
-- `docs/` enthält die Website nisg-meldekompass.at (GitHub Pages).
+- `docs/` enthält die Website nisg-meldekompass.at (GitHub Pages), unter `docs/demo/` das Werkzeug zum Ausprobieren, unverändert.
 - Unter „Releases“ liegt jede veröffentlichte Version als ZIP mit HTML-Datei und LIESMICH. Die Prüfsummen (SHA-256) stehen in den Notizen zum Release.
 - Der Quelltext wird hier nicht veröffentlicht.
 

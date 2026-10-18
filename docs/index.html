@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  NISG 2026 MeldeKompass – Funktionsübersicht · Version 1.1.0 · Stand 12.10.2026
+  NISG 2026 MeldeKompass – Funktionsübersicht · Version 1.1.1 · Stand 18.10.2026
   © 2026 Thomas Eder. Quelle: website/index.html, gebaut mit build.py.
 -->
 <html lang="de">
@@ -49,6 +49,7 @@ h2{font-size:28px !important}
 <p style="margin: 0; font-size: 21px; line-height: 1.5; color: #DDE1E8; max-width: 34rem;">Meldepflichtig oder nicht? Der MeldeKompass prüft einen Cybersicherheitsvorfall Schritt für Schritt, rechnet die Fristen aus, erzeugt die Meldetexte und fasst die Lage für die Geschäftsleitung zusammen.</p>
 <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px;">
 <a href="https://nisg-meldekompass.at/download" style="display: inline-block; background: #0B5C6E; color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.03em; padding: 14px 28px; border-radius: 23px;">Kostenlos herunterladen</a>
+<a href="demo/" style="display: inline-block; background: #FFFFFF; color: #0E2F37; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.03em; padding: 14px 28px; border-radius: 23px;">Online ausprobieren</a>
 <a href="#funktionen" style="display: inline-block; border: 1.5px solid #FFFFFF; color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.03em; padding: 12.5px 26px; border-radius: 23px;">Funktionen ansehen</a>
 </div>
 </div>
@@ -238,8 +239,10 @@ h2{font-size:28px !important}
 <span style="color: #0B5C6E; font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">Kostenlos für alle</span>
 <h2 style="margin: 0; font-size: 36px; line-height: 1.15; color: #000000;">Herunterladen, öffnen, vorbereiten</h2>
 <p style="margin: 0; color: #575757;">Der MeldeKompass steht jeder Person und jeder Organisation kostenlos zur Verfügung, auch für die gewerbliche Nutzung. Die Datei darf unverändert und unentgeltlich weitergegeben werden. Die Nutzung erfolgt ohne Gewährleistung; das Werkzeug ist eine Orientierungshilfe und ersetzt keine Rechtsberatung.</p>
+<p id="online" style="margin: 0; color: #575757;">Zum Ausprobieren läuft der MeldeKompass auch direkt auf dieser Website, ohne Download. Es ist dieselbe Datei. Auch online bleiben die Eingaben im Browser und im gewählten Ordner. Für den Einsatz im Ernstfall die Datei herunterladen: Sie funktioniert ohne Internetverbindung, und die Prüfsumme lässt sich vor dem ersten Öffnen kontrollieren.</p>
 <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px;">
 <a href="https://nisg-meldekompass.at/download" style="display: inline-block; background: #0B5C6E; color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.03em; padding: 14px 28px; border-radius: 23px;">Kostenlos herunterladen</a>
+<a href="demo/" style="display: inline-block; border: 1.5px solid #0B5C6E; color: #0B5C6E; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.03em; padding: 12.5px 26px; border-radius: 23px; background: #FFFFFF;">Online ausprobieren</a>
 <a href="mailto:kontakt@nisg-meldekompass.at" style="display: inline-block; border: 1.5px solid #0B5C6E; color: #0B5C6E; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.03em; padding: 12.5px 26px; border-radius: 23px; background: #FFFFFF;">Kontakt aufnehmen</a>
 </div>
 </div>
@@ -250,8 +253,8 @@ h2{font-size:28px !important}
 <li>Einen Ordner, lokal oder auf einem Netzlaufwerk</li>
 <li>Die Einrichtung ist wesentliche oder wichtige Einrichtung nach NISG 2026</li>
 </ul>
-<p style="margin: 0; color: #333333; font-size: 15px;"><strong>Aktuelle Version 1.1.0</strong> vom 12.10.2026</p>
-<p style="margin: 0; color: #575757; font-size: 13px; overflow-wrap: anywhere;">SHA-256 von NISG2026-MeldeKompass.html: <code>27fc5b18c821a40c46cf69cb245063018f7f64de4e556f9671a5030129ebc967</code></p>
+<p style="margin: 0; color: #333333; font-size: 15px;"><strong>Aktuelle Version 1.1.1</strong> vom 18.10.2026</p>
+<p style="margin: 0; color: #575757; font-size: 13px; overflow-wrap: anywhere;">SHA-256 von NISG2026-MeldeKompass.html: <code>cfec53359f71b342c947ef660f3044472f9f2597da5a0668de1fdda5411c1cda</code></p>
 <p style="margin: 0; color: #575757; font-size: 15px;">Alle Versionen und Änderungen: <a href="https://github.com/edertho/nisg-meldekompass/releases" target="_blank" rel="noopener noreferrer">GitHub</a></p>
 <p style="margin: 0; color: #575757; font-size: 15px;">Rechtsstand: NISG 2026 in der Fassung vom 01.10.2026, NISV 2026, DVO (EU) 2024/2690, Meldeformulare des Bundesamts für Cybersicherheit (Stand 01.10.2026).</p>
 </div>
@@ -273,7 +276,7 @@ h2{font-size:28px !important}
 <p><strong>Hosting:</strong> Die Website liegt bei GitHub Pages, einem Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. St., San Francisco, CA 94107, USA. Beim Aufruf der Seite verarbeitet GitHub technisch notwendige Daten, insbesondere die IP-Adresse. GitHub protokolliert und speichert die IP-Adresse nach eigenen Angaben zu Sicherheitszwecken. Der Betreiber dieser Website hat auf diese Protokolle keinen Zugriff. Rechtsgrundlage ist das berechtigte Interesse an einer sicheren und zuverlässigen Bereitstellung der Website (Art. 6 Abs. 1 lit. f DSGVO). Dabei können Daten in die USA übermittelt werden. GitHub hält nach eigenen Angaben das EU-U.S. Data Privacy Framework ein und stützt Übermittlungen auf die Standardvertragsklauseln der Europäischen Kommission. Näheres in der <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener noreferrer">Datenschutzerklärung von GitHub</a>.</p>
 <p><strong>Download:</strong> Der Link „Kostenlos herunterladen“ führt zur Datei bei GitHub. Auch dabei verarbeitet GitHub die IP-Adresse wie beim Aufruf der Website.</p>
 <p><strong>Kontakt per E-Mail:</strong> Angaben aus einer E-Mail (Adresse, Inhalt der Nachricht) werden nur verwendet, um die Anfrage zu beantworten, und gelöscht, sobald sie dafür nicht mehr nötig sind. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Das Postfach wird über Google Workspace betrieben. Google verarbeitet die E-Mails dabei als Auftragsverarbeiter; die Daten können auch außerhalb der Europäischen Union verarbeitet werden. Näheres im <a href="https://cloud.google.com/terms/data-processing-addendum" target="_blank" rel="noopener noreferrer">Cloud Data Processing Addendum von Google</a>.</p>
-<p><strong>Das Werkzeug</strong> läuft nach dem Herunterladen vollständig lokal im Browser. Es überträgt keine Daten an den Betreiber dieser Website oder an Dritte.</p>
+<p><strong>Das Werkzeug</strong> läuft vollständig lokal im Browser, nach dem Herunterladen ebenso wie unter „Online ausprobieren“. Es überträgt keine Daten an den Betreiber dieser Website oder an Dritte. Beim Öffnen der Online-Fassung lädt der Browser die Datei von GitHub Pages; dafür gilt der Abschnitt „Hosting“. Das Werkzeug speichert im Speicher des Browsers nur den Namen der bearbeitenden Person, wenn er eingegeben wird, und den Zugriff auf den gewählten Ordner, damit dieser beim nächsten Öffnen wieder verbunden werden kann. Diese Angaben verlassen das Gerät nicht. Die Vorfalldaten liegen im gewählten Ordner.</p>
 <p><strong>Rechte der betroffenen Personen:</strong> Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch (Art. 15 bis 21 DSGVO). Anfragen an die oben genannte Adresse. Beschwerden nimmt die Österreichische Datenschutzbehörde entgegen: Barichgasse 40–42, 1030 Wien, <a href="https://www.dsb.gv.at" target="_blank" rel="noopener noreferrer">dsb.gv.at</a>.</p>
 <p>Stand: Oktober 2026</p></section>
 </div>
