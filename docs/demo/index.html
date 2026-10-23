@@ -1,6 +1,6 @@
 <!doctype html>
 <!--
-  NISG 2026 MeldeKompass · Version 1.1.1 · Stand 18.10.2026
+  NISG 2026 MeldeKompass · Version 1.2.0 · Stand 23.10.2026
   © 2026 Thomas Eder. Kostenlos nutzbar, ohne Gewährleistung.
   Weitergabe nur unverändert und unentgeltlich; Nutzungsbedingungen siehe „Über dieses Werkzeug“.
   Orientierungshilfe zu NISG 2026, NISV 2026 und DVO (EU) 2024/2690. Keine Rechtsberatung.
@@ -83,6 +83,11 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .trail button{all:unset;cursor:pointer;color:var(--ink);min-width:0}
 .trail button:hover{color:var(--accent);text-decoration:underline}
 .trail button:focus-visible{outline:2px solid var(--accent)}
+.trail li.on{box-shadow:inset 3px 0 0 var(--accent);padding-left:6px}
+.trail li.on button{font-weight:600}
+.finish{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin-top:14px}
+.btn.prev{outline:2px dashed var(--muted);outline-offset:2px}
+.prevnote{margin:0 0 8px;font-size:.9rem;color:var(--muted)}
 .yn{font-family:var(--f-mono);font-size:.74rem;font-weight:500;padding:1px 7px;border-radius:4px;background:var(--accent-soft);color:var(--accent)}
 
 /* Result */
@@ -135,6 +140,13 @@ details.lawgrp > summary strong{color:var(--ink)}
 .lawnote{font-size:.8rem;color:var(--muted);margin-top:6px}
 .trig details.law{margin-top:8px}
 details.law + details.law{margin-top:6px}
+/* Sonderfall zu einer Frage, zugeklappt */
+details.more{font-size:.9rem;max-width:76ch}
+details.more > summary{cursor:pointer;color:var(--accent);font-weight:500}
+.morebox{margin-top:8px;padding:8px 12px;border-left:3px solid var(--line);background:var(--bg);border-radius:0 var(--r) var(--r) 0;color:var(--ink)}
+.morebox p{margin:0}
+.morebox p + p{margin-top:8px}
+details.more + details.law{margin-top:6px}
 .qn{color:var(--accent)}
 .btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
 .types{display:flex;flex-direction:column;gap:14px}
@@ -215,9 +227,25 @@ main > section{display:flex;flex-direction:column;gap:14px;min-width:0}
 .sub{font-size:.8rem;font-family:var(--f-mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:4px}
 .rows{display:flex;flex-direction:column;gap:10px}
 .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 10px;align-items:end;padding-bottom:10px;border-bottom:1px dashed var(--line)}
-.row.two{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.row.two .sub{grid-column:1/-1;margin:0}
 .row .del{justify-self:start;font-size:.84rem}
+.row .sub,.row .puse{grid-column:1/-1;margin:0}
+.row .del:disabled{color:var(--muted);text-decoration:none;cursor:default}
+.people .dep{flex-basis:100%}
+.row.block{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:14px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.row.block .del{align-self:flex-start}
+.grid.c1{grid-template-columns:minmax(0,24rem)}
+.grid.c2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.c3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:720px){.grid.c3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.grid.c2,.grid.c3{grid-template-columns:1fr}}
+.fld .ref{font-weight:400}
+/* Plausibilität: abgelehnte Eingabe (rot) und offene Rückfrage (gelb) */
+.perr{display:block;padding:6px 10px;border-left:4px solid var(--stop);background:var(--stop-bg);color:var(--ink);font-size:.84rem;font-weight:500;line-height:1.4;border-radius:var(--r)}
+.perr.ask{border-left-color:var(--warn);background:var(--warn-bg)}
+.perr .link{font-size:.84rem;font-weight:600}
+.fld input[aria-invalid="true"],.tin input[aria-invalid="true"]{border-color:var(--stop);box-shadow:0 0 0 1px var(--stop)}
+.fld input.pl-r[aria-invalid="true"],.tin input.pl-r[aria-invalid="true"]{border-color:var(--warn);box-shadow:0 0 0 1px var(--warn)}
+@media print{.perr{display:none}}
 .savebar{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .preview{display:flex;flex-direction:column;gap:10px}
 .preview h3{font-size:1.1rem}
@@ -247,6 +275,7 @@ main > section{display:flex;flex-direction:column;gap:14px;min-width:0}
 .kv dd{margin:0;overflow-wrap:anywhere}
 /* Vorfälle */
 .ihead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.iheadl{display:flex;flex-wrap:wrap;gap:6px 18px}
 .inclist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .inc{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:start}
 .it{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -401,12 +430,34 @@ div.interim p{flex:1 1 260px;margin:0}
 .actbtns{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .actlist{list-style:none;margin:0;padding:0 0 0 14px;border-left:2px solid var(--line);display:flex;flex-direction:column;gap:10px}
 .actlist li{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:2px 10px;align-items:baseline;font-size:.9rem}
-.actlist li::before{content:"";position:absolute;left:-20px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+.actlist li::before{content:"";position:absolute;left:-20px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--at,var(--accent))}
 .actlist time{font:500 .82rem var(--f-mono);font-variant-numeric:tabular-nums;grid-column:1}
 .actlist .badge{grid-column:2;justify-self:start}
-.actlist .link{grid-column:3;grid-row:1;font-size:.82rem}
+.actlist .abtns{grid-column:3;grid-row:1;display:flex;gap:12px}
+.actlist .abtns .link{font-size:.82rem}
 .actlist .atext{grid-column:1/-1;overflow-wrap:anywhere}
 .actlist .ref{grid-column:1/-1}
+.actlist li.editing{display:block}
+.actlist li.editing .actform{border-left:3px solid var(--at,var(--accent))}
+/* Arten der Aktion: eigene Farbe je Art, in allen Editionen gleich */
+:root{
+  --at-info:#1D5FA8; --at-info-bg:#E3EEFA; --at-ent:#6B3FA0; --at-ent-bg:#EFE7F8; --at-mass:#2E6B3A; --at-mass-bg:#E5F1E6;
+  --at-kint:#0B6B66; --at-kint-bg:#DDF1EF; --at-kext:#8A5A00; --at-kext-bg:#FFF2D4; --at-meld:#B3261E; --at-meld-bg:#FBE9E7;
+  --at-esk:#A0236A; --at-esk-bg:#F9E4EF;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --at-info:#8DB8EC; --at-info-bg:#16263A; --at-ent:#C3A3EA; --at-ent-bg:#2A1F3A; --at-mass:#89C995; --at-mass-bg:#17301C;
+  --at-kint:#6FCFC6; --at-kint-bg:#12302E; --at-kext:#E9B758; --at-kext-bg:#352A12; --at-meld:#F2877E; --at-meld-bg:#3A1D1A;
+  --at-esk:#EE8CC0; --at-esk-bg:#3A1A2B}}
+:root[data-theme="dark"]{
+  --at-info:#8DB8EC; --at-info-bg:#16263A; --at-ent:#C3A3EA; --at-ent-bg:#2A1F3A; --at-mass:#89C995; --at-mass-bg:#17301C;
+  --at-kint:#6FCFC6; --at-kint-bg:#12302E; --at-kext:#E9B758; --at-kext-bg:#352A12; --at-meld:#F2877E; --at-meld-bg:#3A1D1A;
+  --at-esk:#EE8CC0; --at-esk-bg:#3A1A2B}
+.at-info{--at:var(--at-info);--at-bg:var(--at-info-bg)} .at-ent{--at:var(--at-ent);--at-bg:var(--at-ent-bg)}
+.at-mass{--at:var(--at-mass);--at-bg:var(--at-mass-bg)} .at-kint{--at:var(--at-kint);--at-bg:var(--at-kint-bg)}
+.at-kext{--at:var(--at-kext);--at-bg:var(--at-kext-bg)} .at-meld{--at:var(--at-meld);--at-bg:var(--at-meld-bg)}
+.at-esk{--at:var(--at-esk);--at-bg:var(--at-esk-bg)} .at-sonst{--at:var(--muted);--at-bg:var(--bg)}
+.badge.at{background:var(--at-bg);color:var(--at);border:1px solid var(--at)}
 
 .csirts{list-style:none;margin:6px 0;padding:0;display:flex;flex-direction:column;gap:10px}
 .csirts li{display:flex;flex-direction:column;gap:2px;border-left:3px solid var(--accent);padding:4px 0 4px 10px;font-size:.88rem;color:var(--ink);min-width:0}
@@ -483,6 +534,14 @@ div.interim p{flex:1 1 260px;margin:0}
 .efr li.over{border-left-color:var(--stop)}
 .efr li.over span{color:var(--stop);font-weight:600}
 .eneed{background:var(--bg);border-radius:var(--r);padding:12px 14px}
+/* Bericht zum Drucken: Tabelle der Checkliste */
+.ptab{width:100%;border-collapse:collapse;font-size:.9rem}
+.ptab th,.ptab td{text-align:left;vertical-align:top;padding:4px 6px;border-bottom:1px solid var(--line)}
+.ptab th{font-size:.75rem;font-family:var(--f-mono);font-weight:500;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.ptab td:first-child{width:2.5em;color:var(--muted)}
+.ptab td:last-child{width:6em;font-weight:600}
+.ptab .ref{display:block;font-size:.85em}
+.pnote{display:block;margin-top:3px;padding:3px 0 3px 8px;border-left:2px solid var(--line);color:var(--ink);white-space:normal}
 #printroot{display:none}
 @media print{
   body.print-exec > *:not(#printroot){display:none!important}
@@ -496,12 +555,18 @@ div.interim p{flex:1 1 260px;margin:0}
   body.print-exec .execdoc .note{font-size:7.5pt}
   body.print-exec .execdoc .kv{font-size:9pt;gap:2px 10px}
   body.print-exec .execdoc h4{margin-bottom:3px}
+  body.print-exec .printdoc section{break-inside:auto}
+  body.print-exec .printdoc h4{break-after:avoid}
+  body.print-exec .ptab{font-size:8.5pt}
+  body.print-exec .printdoc .efr{font-size:9pt}
+  body.print-exec .printdoc .kv dt{hyphens:auto}
+  body.print-exec .ptab tr{break-inside:avoid}
   @page{size:A4;margin:14mm 15mm}
 }
 </style>
 </head>
 <body>
-<div class="topbar"><div class="inner"><span><a href="https://nisg-meldekompass.at" target="_blank" rel="noopener noreferrer"><strong>nisg-meldekompass.at</strong></a></span><span>NISG 2026 MeldeKompass · Version 1.1.1 · Stand 18.10.2026</span></div></div>
+<div class="topbar"><div class="inner"><span><a href="https://nisg-meldekompass.at" target="_blank" rel="noopener noreferrer"><strong>nisg-meldekompass.at</strong></a></span><span>NISG 2026 MeldeKompass · Version 1.2.0 · Stand 23.10.2026</span></div></div>
 <div class="wrap">
   <header>
     <span class="eyebrow">NIS2 · NISV 2026 · DVO (EU) 2024/2690</span>
@@ -540,11 +605,11 @@ div.interim p{flex:1 1 260px;margin:0}
         </ul>
         <p class="note">Quelle: <a href="https://www.bundesamt-cybersicherheit.gv.at/303/meldepflicht-und-fristen.html" target="_blank" rel="noopener noreferrer">Bundesamt für Cybersicherheit, Meldepflicht und Fristen</a>, Stand 05.10.2026.</p></section>
       <section><h3>Anwendungsbereich</h3>
-        <p>Das Werkzeug richtet sich an Einrichtungen, die als wesentliche oder wichtige Einrichtung unter das NISG 2026 fallen (§ 24). Ob das zutrifft, prüft es nicht. Die Meldepflicht betrifft die gesamte Einrichtung. Die Sektoren werden aus der Vorbereitung vorausgewählt; nach ihnen richten sich die besonderen Kriterien der DVO und die zuständigen CSIRTs.</p></section>
+        <p>Das Werkzeug richtet sich an Einrichtungen, die als wesentliche oder wichtige Einrichtung unter das NISG 2026 fallen (§ 24). Ob das zutrifft, prüft es nicht. Die Meldepflicht betrifft die gesamte Einrichtung. Die Sektoren werden aus der Vorbereitung vorausgewählt; nach ihnen richten sich die besonderen Kriterien der DVO und die zuständigen CSIRTs. Die Kriterien des § 5 NISV gelten für alle Einrichtungen, auch für jene, die nur unter die DVO fallen.</p></section>
       <section><h3>Verschlüsselte Kommunikation</h3>
         <div id="cryptonote"></div></section>
       <section class="wide2" id="rechtstexte"><h3>Rechtstexte zur Checkliste</h3>
-        <p>Wortlaut der Vorschriften, auf die sich Checkliste und Ergebnisse stützen, samt den Begriffen aus UWG, IFG und Richtlinie (EU) 2016/943, auf die sie verweisen, dazu Auszüge aus den Erläuterungen zur NISV. In der Checkliste steht derselbe Wortlaut aufklappbar bei jeder Frage.</p>
+        <p>Wortlaut der Vorschriften, auf die sich Checkliste und Ergebnisse stützen, samt den Begriffen aus UWG, IFG und Richtlinie (EU) 2016/943, auf die sie verweisen, dazu Auszüge aus den Erläuterungen zur NISV und Erwägungsgründe der DVO als Auslegungshilfe. In der Checkliste steht derselbe Wortlaut aufklappbar bei jeder Frage.</p>
         <div id="lawdir"></div></section>
       <section><h3>Rechtsstand</h3>
         <p>Rechtsstand: NISG 2026 (BGBl. I Nr. 94/2025) in der Fassung vom 01.10.2026; NISV 2026 (BGBl. II Nr. 290/2026, kundgemacht am 01.10.2026) samt Erläuterungen vom 02.10.2026; Durchführungsverordnung (EU) 2024/2690; für den Begriff des Geschäftsgeheimnisses und der geheim zu haltenden Informationen § 26b UWG und § 6 IFG in der Fassung vom 12.10.2026 sowie Richtlinie (EU) 2016/943; Meldeformulare des Bundesamts für Cybersicherheit, Version 1.0, Stand 01.10.2026. Spätere Änderungen sind nicht berücksichtigt.</p></section>
@@ -565,7 +630,7 @@ div.interim p{flex:1 1 260px;margin:0}
     <summary>Über dieses Werkzeug, rechtliche Hinweise und Datenschutz</summary>
     <div class="cols">
       <section><h3>Versionsstand</h3>
-        <p>NISG 2026 MeldeKompass, Version 1.1.1, Stand 18.10.2026. Rechtsstand siehe „Meldewege, Fristen und Rechtsstand“.</p></section>
+        <p>NISG 2026 MeldeKompass, Version 1.2.0, Stand 23.10.2026. Rechtsstand siehe „Meldewege, Fristen und Rechtsstand“.</p></section>
       <section><h3>Autor und Kontakt</h3>
         <p>Der MeldeKompass wird von Thomas Eder entwickelt und gepflegt. Rückmeldungen und Fragen gerne per E-Mail:</p>
         <ul><li>Website: <a href="https://nisg-meldekompass.at" target="_blank" rel="noopener noreferrer">nisg-meldekompass.at</a></li>
@@ -580,7 +645,7 @@ div.interim p{flex:1 1 260px;margin:0}
         <p>Das Werkzeug selbst enthält kein KI-System und überträgt keine Daten an KI-Dienste. Die Ergebnisse entstehen nach fest hinterlegten, nachvollziehbaren Regeln. Der Hinweis dient der Transparenz im Sinne der KI-Verordnung (EU) 2024/1689.</p></section>
       <section><h3>Haftungsausschluss</h3>
         <p>Dieses Werkzeug ist eine kostenlose Orientierungshilfe ohne Gewährleistung. Es ersetzt weder eine Rechtsberatung noch die Prüfung des Einzelfalls und die Entscheidung der Einrichtung. Für Vollständigkeit, Richtigkeit und Aktualität wird keine Gewähr übernommen. Verbindlich sind ausschließlich die Rechtsvorschriften und die Vorgaben der zuständigen Behörden.</p>
-        <p>Auslegungen, etwa zum Zusammenwirken von NISV und DVO bei mehreren Sektoren, und Empfehlungen sind im Werkzeug als solche gekennzeichnet.</p></section>
+        <p>Auslegungen, etwa zum Zusammenwirken von NISV und DVO, und Empfehlungen sind im Werkzeug als solche gekennzeichnet.</p></section>
       <section><h3>Datenschutz und Datensicherheit</h3>
         <ul><li>Das Werkzeug läuft vollständig lokal im Browser. Es sendet keine Daten an Server, setzt keine Cookies, verwendet kein Tracking und lädt keine externen Schriften oder Skripte. Eine Content Security Policy in der Datei unterbindet Netzwerkzugriffe technisch.</li>
         <li>Daten werden ausschließlich als Textdateien im gewählten Ordner gespeichert. Der Browser merkt sich nur, welcher Ordner verbunden war, und den eingegebenen Namen der bearbeitenden Person.</li>
@@ -603,7 +668,7 @@ div.interim p{flex:1 1 260px;margin:0}
 </div>
 <footer class="sitefoot"><div class="inner">
   <span><strong>© 2026 Thomas Eder</strong> · kostenlos nutzbar, ohne Gewährleistung</span>
-  <span>Version 1.1.1 · Stand 18.10.2026 · <a href="https://nisg-meldekompass.at" target="_blank" rel="noopener noreferrer">nisg-meldekompass.at</a> · <a href="mailto:kontakt@nisg-meldekompass.at">Feedback: kontakt@nisg-meldekompass.at</a> · <a href="#impressum">Impressum</a></span>
+  <span>Version 1.2.0 · Stand 23.10.2026 · <a href="https://nisg-meldekompass.at" target="_blank" rel="noopener noreferrer">nisg-meldekompass.at</a> · <a href="mailto:kontakt@nisg-meldekompass.at">Feedback: kontakt@nisg-meldekompass.at</a> · <a href="#impressum">Impressum</a></span>
   <p class="sub">Orientierungshilfe zu NISG 2026, NISV 2026 und DVO (EU) 2024/2690. Keine Rechtsberatung. Läuft vollständig lokal, Daten bleiben im gewählten Ordner.</p>
 </div></footer>
 <script>
@@ -612,7 +677,7 @@ div.interim p{flex:1 1 260px;margin:0}
    Nicht amtliche Wiedergabe aus quellen/ (Fassungen siehe quellen/LIESMICH.txt).
    Jeder Text steht wörtlich in der Quelle; tests/run.js prüft das gegen quellen/text/.
    t: Zeilen der Vorschrift (Einleitung, Ziffern „1.“, Buchstaben „a)“); up: übergeordnete Einleitung.
-   Erläuterungen sind Auslegungshilfen, keine Vorschriften, und werden getrennt gekennzeichnet.
+   Erläuterungen und Erwägungsgründe sind Auslegungshilfen, keine Vorschriften (aid:true), und werden getrennt gekennzeichnet.
    UWG, IFG und Richtlinie (EU) 2016/943 enthalten die Begriffe, auf die § 5 Abs. 1 Z 2 NISV und Art. 3 Abs. 1 lit. b DVO verweisen
    (def:true); die Checkliste zeigt sie getrennt vom Wortlaut des Kriteriums in einem eigenen Aufklapptext „Begriffe“.
    ===================================================================== */
@@ -629,8 +694,10 @@ const LAW_SRC = {
     full:"Durchführungsverordnung (EU) 2024/2690 der Kommission vom 17.10.2024, ABl. L vom 18.10.2024", url:"http://data.europa.eu/eli/reg_impl/2024/2690/oj", link:"EUR-Lex"},
   rl:{def:true, name:"Richtlinie (EU) 2016/943", cover:"Art. 2 Nr. 1, Begriff „Geschäftsgeheimnis“",
     full:"Richtlinie (EU) 2016/943 des Europäischen Parlaments und des Rates vom 08.06.2016 (Geschäftsgeheimnisse), ABl. L 157 vom 15.06.2016", url:"http://data.europa.eu/eli/dir/2016/943/oj", link:"EUR-Lex"},
-  erl:{name:"Erläuterungen zur NISV 2026", cover:"Auszüge zu §§ 5 und 6, Auslegungshilfe",
-    full:"Erläuterungen zur NISV 2026, Stand 02.10.2026 (Auslegungshilfe, nicht verbindlich)"}
+  erl:{aid:true, name:"Erläuterungen zur NISV 2026", cover:"Auszüge zu §§ 5 bis 7, Auslegungshilfe",
+    full:"Erläuterungen zur NISV 2026, Stand 02.10.2026 (Auslegungshilfe, nicht verbindlich)"},
+  erwgr:{aid:true, name:"Erwägungsgründe der DVO (EU) 2024/2690", cover:"ErwGr 16 und 33, Auslegungshilfe",
+    full:"Erwägungsgründe der Durchführungsverordnung (EU) 2024/2690 (Auslegungshilfe, nicht verbindlich)", url:"http://data.europa.eu/eli/reg_impl/2024/2690/oj", link:"EUR-Lex"}
 };
 const LAW = {
   "nisg-3":{src:"nisg", ref:"§ 3 NISG 2026", t:[
@@ -854,7 +921,15 @@ const LAW = {
   "erl-5-9":{src:"erl", ref:"zu § 5 Abs. 1 Z 9 NISV", t:[
     "Zudem liegt ein erheblicher Cybersicherheitsvorfall auch dann vor, wenn er zur Aktivierung des Krisenmanagements oder von Notfallwiederherstellungsplänen des Betriebskontinuitätsmanagements geführt hat. Dies ist in Zusammenhang mit den Anforderungen zum Krisenmanagement im Bereich der Risikomanagementmaßnahmen zu sehen. Einrichtungen sind im Zuge der Umsetzung von Risikomanagementmaßnahmen dazu verpflichtet, Maßnahmen im Kontext des Krisenmanagements bzw. des Betriebskontinuitätsmanagement zu setzen. Diese haben angemessen und wirksam zu sein. Die Aktivierung des Krisenmanagements zum gebotenen Zeitpunkt, insbesondere bei Erreichen der einschlägigen internen Eskalationsstufen indiziert Erheblichkeit im Sinne des § 35 Abs. 1 NISG 2026."]},
   "erl-6":{src:"erl", ref:"zu § 6 NISV", t:[
-    "Planmäßige Betriebsunterbrechungen und geplante Folgen planmäßiger Wartungsarbeiten im Sinne des § 6 sollen nicht zur Einstufung einer Erheblichkeit führen. Nicht planmäßige Unterbrechungen und ungeplante Folgen sind bereits begrifflich nicht von § 6 erfasst und sind nach den übrigen Bestimmungen zu beurteilen. Bei Zeiträumen außerhalb der vertraglich bedungenen Leistungszeiten, scheitert es in der Regel an der Betroffenheit Dritter."]}
+    "Planmäßige Betriebsunterbrechungen und geplante Folgen planmäßiger Wartungsarbeiten im Sinne des § 6 sollen nicht zur Einstufung einer Erheblichkeit führen. Nicht planmäßige Unterbrechungen und ungeplante Folgen sind bereits begrifflich nicht von § 6 erfasst und sind nach den übrigen Bestimmungen zu beurteilen. Bei Zeiträumen außerhalb der vertraglich bedungenen Leistungszeiten, scheitert es in der Regel an der Betroffenheit Dritter."]},
+  "erl-7":{src:"erl", ref:"zu § 7 NISV", t:[
+    "In § 7 wird klargestellt, dass Cybersicherheitsvorfälle, die einzeln betrachtet nicht als erhebliche Cybersicherheitsvorfälle anzusehen sind, zusammengenommen als ein erheblicher Cybersicherheitsvorfall gelten, wenn alle in § 7 genannten Kriterien kumulativ erfüllt sind. Es handelt sich dabei um eine Anlehnung an Art. 4 der Durchführungsverordnung (EU) 2024/2690 (Wiederholte Sicherheitsvorfälle);in Bezug auf den Verweis auf Art. 4 in Punkt 3.4.2 lit. b im Anhang der DVO 2024/2690 (vgl. Erläuterungen zu § 2).",
+    "Wiederholte Cybersicherheitsvorfälle können auf erhebliche Mängel und Schwächen in den Verfahren für das Cybersicherheitsrisikomanagement der betreffenden Einrichtung und deren Reifegrad im Bereich der Cybersicherheit hindeuten. Darüber hinaus können solche wiederholten Cybersicherheitsvorfälle erhebliche finanzielle Verluste bei der betreffenden Einrichtung verursachen.",
+    "§ 7 Z 2 knüpft dabei neben der Ursache zusätzlich an die Auswirkung des Cybersicherheitsvorfalls an, die bei den zu betrachtenden Cybersicherheitsvorfällen für eine Anwendung des § 7 ebenfalls der Art nach dieselbe sein muss. Neben dem Bedrohungsfeld wird somit zusätzlich and das Bedrohungsziel angeknüpft und der wiederholte Cybersicherheitsvorfall näher konkretisiert. Ein wiederholter Cybersicherheitsvorfall nach § 7 kann demnach insbesondere dann vorliegen, wenn Hinweise dafür vorliegen, dass es sich um denselben Bedrohungsakteur handelt, die gleiche Vorgehensweise vorliegt, es sich um denselben Angriffsvektor handelt, der Cybersicherheitsvorfall sich auf den gleichen Zeitpunkt bezieht, ein gleichartiges betroffenes Gut vom Cybersicherheitsvorfall betroffen ist oder das gleiche Angriffsziel gegeben ist."]},
+  "erwgr-16":{src:"erwgr", ref:"ErwGr 16 DVO", t:[
+    "(16) Zur Vermeidung erheblicher Störungen und Schäden, die durch die Ausnutzung nicht behobener Schwachstellen in Netz- und Informationssystemen verursacht werden, sollten die betreffenden Einrichtungen geeignete Sicherheitspatch-Managementverfahren festlegen und anwenden, die mit den Änderungs-, Schwachstellen- und Risikomanagementverfahren sowie anderen einschlägigen Verfahren der betreffenden Einrichtungen im Einklang stehen. Die betreffenden Einrichtungen sollten Maßnahmen ergreifen, die in einem angemessenen Verhältnis zu ihrer Mittelausstattung stehen, um sicherzustellen, dass durch Sicherheitspatches keine zusätzlichen Schwachstellen oder Instabilitäten eingebracht werden. Im Falle einer geplanten Nichtverfügbarkeit des Dienstes, die durch die Anwendung von Sicherheitspatches verursacht wird, sollen die betreffenden Einrichtungen ihre Kunden im Voraus angemessen hierüber informieren."]},
+  "erwgr-33":{src:"erwgr", ref:"ErwGr 33 DVO", t:[
+    "(33) Wartungsarbeiten, die zu einer eingeschränkten Verfügbarkeit oder zur Nichtverfügbarkeit der Dienste führen, sollten nicht als erhebliche Sicherheitsvorfälle angesehen werden, wenn die eingeschränkte Verfügbarkeit oder Nichtverfügbarkeit des Dienstes im Rahmen eines planmäßigen Wartungsvorgangs eintritt. Darüber hinaus sollte es nicht als erheblicher Sicherheitsvorfall angesehen werden, wenn ein Dienst aufgrund planmäßiger Unterbrechungen wie etwa im Voraus vertraglich vereinbarter Unterbrechungen oder Nichtverfügbarkeiten nicht verfügbar ist."]}
 };
 const STAGES = ["Sektoren","Vorfall","Erheblichkeit","Generalklausel"];
 
@@ -901,6 +976,9 @@ const CRYPTO_NOTE = `<p class="note">Der reguläre Weg ist das Meldeportal im US
 
 const MELDEFRISTEN_URL = "https://www.bundesamt-cybersicherheit.gv.at/303/meldepflicht-und-fristen.html";
 const FAQ_MELD_URL = "https://www.bundesamt-cybersicherheit.gv.at/faq/meldungen.html";
+/* FAQ des Bundesamts zur NISV 2026 (Stand 20.10.2026): § 5 (Krisenmanagement, „kann“) und § 7 (Beispiele, Erheblichkeit nach § 35 NISG 2026) */
+const FAQ_NISV5_URL = "https://www.bundesamt-cybersicherheit.gv.at/faq/erhebliche-cybersicherheitsvorfaelle.html";
+const FAQ_NISV7_URL = "https://www.bundesamt-cybersicherheit.gv.at/faq/wiederholte-cybersicherheitsvorfaelle.html";
 /* Frist am Wochenende laut FAQ des Bundesamts (Meldungen, Stand 25.09.2026); Feiertage nennt die FAQ nicht, sie betreffen hier nur die Berechnung */
 const WEEKEND_NOTE = "Die Stundenfristen laufen auch am Wochenende, selbst wenn die Einrichtung ihre Dienste dann nicht anbietet: Sie knüpfen an die Kenntnis des erheblichen Vorfalls an (§ 34 Abs. 2 Z 1 NISG 2026, FAQ des Bundesamts zu Meldungen). Das Werkzeug rechnet alle Fristen durchgehend, auch über Feiertage. Die Pflicht lautet jeweils „unverzüglich“, die Stunden sind die Obergrenze.";
 /* Zugang der öffentlichen Verwaltung zum Meldeportal (Stand der Bundesamt-Seite: 05.10.2026) */
@@ -985,10 +1063,13 @@ function userNote(pct, abs, what, p=profile){
 /* ---------- Zustand ---------- */
 let sel = new Set();     // gewählte Arten
 let selUnclear = false;  // Zuordnung als unklar markiert
-let path = [];           // [{id, ans}]
+let path = [];           // [{id, ans}], je Frage höchstens eine Antwort, in der Reihenfolge von order()
 let cur = "qs";
+let prevAns = {};        // Antworten von Fragen, die nach einer Änderung weggefallen sind; nur zur Anzeige, wird nicht gespeichert
+const pe = id => path.find(p=>p.id===id);
 const has = g => [...sel].some(id=>T[id].g===g);
-const ctx = () => ({N:has("nisv"), D:has("dvo"), F:has("dora"), dvo:[...sel].filter(id=>T[id].g==="dvo")});
+/* N: § 5 bis 7 NISV angewendet; sie gelten für alle Einrichtungen, auch für DVO-Arten */
+const ctx = () => ({N:has("nisv")||has("dvo"), D:has("dvo"), F:has("dora"), dvo:[...sel].filter(id=>T[id].g==="dvo")});
 
 function thrPreview(p){
   const f=thrFin(p), n=num(p?.nutzer);
@@ -1014,23 +1095,32 @@ const NUTZER_NISV = "Dienste sind nur jene, aufgrund derer die Einrichtung in de
 const tag = (n,d) => [n&&"NISV", d&&"DVO"].filter(Boolean);
 /* Begriffe zu c_secret in Kurzform: § 26b Abs. 1 UWG, Art. 2 Nr. 1 Richtlinie (EU) 2016/943, §§ 1 und 6 Abs. 1 IFG; der Wortlaut steht im Aufklapptext „Begriffe“ */
 const SECRET = c => `Ein Geschäftsgeheimnis ist geheim, hat deshalb kommerziellen Wert und ist durch angemessene Maßnahmen geschützt (${[c.N&&"§ 26b Abs. 1 UWG", c.D&&"Art. 2 Nr. 1 der Richtlinie (EU) 2016/943"].filter(Boolean).join(", ")}).${c.N?" § 6 IFG betrifft informationspflichtige Stellen (§ 1 IFG) und nennt die Gründe der Geheimhaltung, etwa öffentliche Sicherheit, Schutz personenbezogener Daten oder Geschäftsgeheimnisse anderer.":""}`;
-/* „Kann verursachen“ in § 5 Abs. 1 Z 1 bis 3 NISV laut Erläuterungen zur NISV (zu § 5); DVO und Erwägungsgründe enthalten diese Einschränkung nicht */
-const KANN = (c, z4) => c.N ? `<p class="tn">Laut Erläuterungen zur NISV „kann“ der Vorfall die Folge nach § 5 Abs. 1 Z 1 bis 3 verursachen, wenn bei gewöhnlichem Verlauf der Dinge damit zu rechnen ist, dass sie in naher Zukunft eintritt, also kurz bevorsteht.${z4?" Für die schwere Gesundheitsschädigung (Z 4) nennen die Erläuterungen diesen Maßstab nicht ausdrücklich.":""}${c.D?" DVO und Erwägungsgründe enthalten diese Einschränkung nicht. Für die gewählten DVO-Arten fragt das Werkzeug deshalb mit dem weiteren Maßstab der DVO (Auslegung).":""}</p>` : "";
+/* „Kann verursachen“ in § 5 Abs. 1 Z 1 bis 3 NISV laut Erläuterungen zur NISV (zu § 5); DVO und Erwägungsgründe enthalten diese Einschränkung nicht.
+   Nicht abwarten, Beispiele Infostealer und laufender Geldabfluss: FAQ des Bundesamts zu § 5 NISV */
+/* Wiederholte Vorfälle nach § 7 NISV: Merkmale laut Erläuterungen zu § 7, Beispiel laut FAQ des Bundesamts zu § 7 NISV */
+const REPEAT_NISV = `<p class="tn">Für dieselbe Ursache und Auswirkung sprechen laut Erläuterungen zu § 7 NISV etwa derselbe Bedrohungsakteur, die gleiche Vorgehensweise, derselbe Angriffsvektor, ein gleichartiges betroffenes Gut oder dasselbe Angriffsziel. Beispiel laut ${extLink(FAQ_NISV7_URL, "FAQ des Bundesamts zu § 7 NISV")}: Dieselbe ungepatchte Schwachstelle wird binnen sechs Monaten mehrfach ausgenutzt, jedes Mal trifft Ransomware Systeme mit niedriger Kritikalität, und die Verluste überschreiten zusammen die Schwelle nach § 5 Abs. 1 Z 1 NISV.</p>`;
+const KANN = (c, z4) => c.N ? `<p class="tn">Laut Erläuterungen zur NISV „kann“ der Vorfall die Folge nach § 5 Abs. 1 Z 1 bis 3 verursachen, wenn bei gewöhnlichem Verlauf der Dinge damit zu rechnen ist, dass sie in naher Zukunft eintritt, also kurz bevorsteht. Nicht abwarten, bis der Schaden eingetreten ist: Zeichnet sich mit hoher Wahrscheinlichkeit ab, dass eine Schwelle bald überschritten wird, ist schon zu melden. Beispiele: Ein Abfluss von Geldern läuft noch, oder ein seit Tagen unbemerkter Infostealer sitzt auf einem Server mit Geschäftsgeheimnissen (${extLink(FAQ_NISV5_URL, "FAQ des Bundesamts zu § 5 NISV")}).${z4?" Für die schwere Gesundheitsschädigung (Z 4) nennen die Erläuterungen diesen Maßstab nicht ausdrücklich.":""}${c.D?" DVO und Erwägungsgründe enthalten diese Einschränkung nicht. Für die gewählten DVO-Arten fragt das Werkzeug deshalb mit dem weiteren Maßstab der DVO (Auslegung).":""}</p>` : "";
 
 const Q = {
   qs:{stage:0, ref:"§ 2, § 24 Abs. 1 und 2 NISG 2026 · Anlagen 1 und 2", multi:true, law:["nisg-24-1","nisg-24-2"],
     short:"Sektoren der Einrichtung",
     q:"In welchen Sektoren ist die Einrichtung tätig?",
-    hint:"Alle Arten auswählen, denen die Einrichtung angehört, etwa Stadtwerke mit Energie, Trinkwasser und Abwasser. Die Meldepflicht trifft die gesamte Einrichtung, unabhängig davon, welcher Bereich betroffen ist. Die allgemeinen Kriterien gelten daher immer; die besonderen Kriterien der DVO kommen für die gewählten digitalen Arten hinzu. Im Meldeformular werden die Sektoren angegeben, die der Vorfall betrifft."},
+    hint:"Alle Arten auswählen, denen die Einrichtung angehört, etwa Stadtwerke mit Energie, Trinkwasser und Abwasser. Die Meldepflicht trifft die gesamte Einrichtung, unabhängig davon, welcher Bereich betroffen ist. Die allgemeinen Kriterien gelten daher immer, auch die des § 5 NISV; die besonderen Kriterien der DVO kommen für die gewählten digitalen Arten hinzu. Im Meldeformular werden die Sektoren angegeben, die der Vorfall betrifft."},
   q1:{stage:1, ref:"§ 3 Z 30 NISG 2026 · Abgrenzung § 3 Z 27 und 29", law:["nisg-3-27","nisg-3-29","nisg-3-30"],
     short:"Cybersicherheitsvorfall eingetreten?",
     q:"Hat ein Ereignis die Verfügbarkeit, Authentizität, Integrität oder Vertraulichkeit von Daten oder Diensten tatsächlich beeinträchtigt?",
     hint:"Wurde der Eintritt verhindert, liegt ein Beinahe-Cybersicherheitsvorfall vor (§ 3 Z 29). Eine bloß mögliche Bedrohung ist eine Cyberbedrohung (§ 3 Z 27). Ein Angriff ist nicht vorausgesetzt: Das Meldeformular nennt als Ursachen neben böswilligem Handeln auch Systemfehler oder Fehlfunktionen, menschliches Versagen und externe Ereignisse (Formular Meldung, Seite 3 und 4).",
+    /* Schwachstelle § 3 Z 9 und 27, zeitnahe Bewertung ErwGr 31 DVO */
+    more:{t:"Sonderfall: vorsorgliche Abschaltung wegen einer Schwachstelle",
+      h:"<p>Eine bekannt gewordene Schwachstelle ist eine Cyberbedrohung (§ 3 Z 9 und 27). Wurde sie bis zur Abschaltung oder zum Patch nicht ausgenutzt, ist das ein Beinahe-Cybersicherheitsvorfall.</p><p>Das zuerst prüfen, etwa anhand von Protokollen und Kompromittierungsindikatoren, und zwar für die Zeit, in der das System angreifbar war. Ein verdächtiges Ereignis ist zeitnah zu bewerten (ErwGr 31 DVO). Ist eine Ausnutzung festgestellt, mit Ja antworten, ist sie nicht auszuschließen, mit Unklar.</p><p>Die Abschaltung selbst beeinträchtigt die Verfügbarkeit des Dienstes. Ob sie als planmäßige Unterbrechung ausgenommen ist, klärt die nächste Frage.</p>"},
     a:[["Ja","q2"],["Nein","q2"],["Unklar","q2"]]},
-  q2:{stage:1, ref:c=>[c.N&&"§ 6 NISV", c.D&&"Art. 3 Abs. 2 DVO"].filter(Boolean).join(" · "), law:c=>[c.N&&"nisv-6", c.D&&"dvo-3-2", c.N&&"erl-6"],
+  q2:{stage:1, ref:c=>[c.N&&"§ 6 NISV", c.D&&"Art. 3 Abs. 2 DVO"].filter(Boolean).join(" · "), law:c=>[c.N&&"nisv-6", c.D&&"dvo-3-2", c.N&&"erl-6", "erwgr-16", "erwgr-33"],
     short:"Planmäßige Unterbrechung oder Wartung?",
     q:"Ist die Beeinträchtigung eine planmäßige Betriebsunterbrechung oder die geplante Folge von Wartungsarbeiten?",
     hint:c=>"Gilt nur für Arbeiten, die von der Einrichtung selbst oder in ihrem Auftrag durchgeführt werden. Ungeplante Folgen, etwa ein Ausfall nach einem fehlgeschlagenen Update, fallen nicht darunter und sind nach den Kriterien zu beurteilen"+(c.N?" (Erläuterungen zu § 6 NISV).":c.D?"; Art. 3 Abs. 2 DVO nimmt nur geplante Folgen aus.":"."),
+    /* Notfallwartung: Auslegung; ErwGr 16 DVO (geplante Nichtverfügbarkeit durch Sicherheitspatches), § 6 NISV wortgleich mit Art. 3 Abs. 2 DVO */
+    more:c=>({t:"Sonderfall: Notfallwartung und vorsorgliche Abschaltung",
+      h:`<p>Auch eine kurzfristig angeordnete Abschaltung oder Notfallwartung, etwa um eine kritische Schwachstelle zu schließen, kann planmäßig sein: Die Einrichtung ordnet sie bewusst an, und die Unterbrechung ist ihre beabsichtigte Folge (Auslegung). Eine Vorankündigung verlangt ${[c.N&&"§ 6 NISV", c.D&&"Art. 3 Abs. 2 DVO"].filter(Boolean).join(" bzw. ")||"Art. 3 Abs. 2 DVO"} nicht. ErwGr 16 DVO nennt die geplante Nichtverfügbarkeit durch Sicherheitspatches und erwartet, dass die Kunden vorab informiert werden.</p><p>Nicht planmäßig ist eine Abschaltung, um einen bereits eingetretenen Angriff einzudämmen. Ebenso wenig sind es Ausfälle, die länger dauern oder weiter reichen als geplant, etwa weil der Patch fehlschlägt. Diese Folgen sind nach den Kriterien zu beurteilen.</p>`}),
     a:[["Ja","NEXT"],["Nein","NEXT"],["Unklar","NEXT"]]},
 
   c_fin:{stage:2, regimes:c=>tag(c.N,c.D),
@@ -1058,7 +1148,7 @@ const Q = {
     short:c=>c.D?"Böswilliger Zugriff, geeignet für schwere Störung?":"Böswilliger Zugriff mit wahrscheinlicher schwerer Störung?",
     q:c=>`Gab es einen erfolgreichen, mutmaßlich böswilligen und unbefugten Zugriff auf Netz- und Informationssysteme, der ${c.D?"geeignet ist":"wahrscheinlich dazu führt"}, schwerwiegende Betriebsstörungen zu verursachen?`,
     hint:c=>c.D
-      ? "Für DVO-Arten reicht die Eignung. Die NISV verlangt für die übrigen Sektoren, dass die Störung wahrscheinlich ist. Wer die strengere NISV-Schwelle erfüllt, erfüllt auch die DVO-Schwelle; deshalb wird hier nur einmal mit dem weiteren Maßstab gefragt. Beispiel aus ErwGr 39 DVO: Ein Angreifer setzt sich in den Systemen fest, um später Dienste zu stören."
+      ? "Für DVO-Arten reicht die Eignung. Die NISV verlangt, dass die Störung wahrscheinlich ist. Wer die strengere NISV-Schwelle erfüllt, erfüllt auch die DVO-Schwelle; deshalb wird hier nur einmal mit dem weiteren Maßstab gefragt. Beispiel aus ErwGr 39 DVO: Ein Angreifer setzt sich in den Systemen fest, um später Dienste zu stören."
       : "Alle vier Merkmale müssen zutreffen. Böswilligkeit allein reicht nicht. „Wahrscheinlich“ heißt laut Erläuterungen zur NISV: Aus Sicht eines objektiven Dritten sprechen mehr Gründe für den Eintritt der Störung als dagegen."},
   c_outage:{stage:2, regimes:()=>["NISV"],
     ref:"§ 5 Abs. 1 Z 7 und 8 NISV", law:["nisv-5-1-7","nisv-5-1-8","erl-5-8"],
@@ -1067,21 +1157,22 @@ const Q = {
     hint:()=>"<ul><li>mehr als 100.000 Nutzer oder 10 % der Nutzer, der niedrigere Wert zählt, oder</li><li>Nutzer im Gebiet mindestens eines Bundeslandes.</li></ul>Eingeschränkt heißt: Der Dienst wird nicht im regelmäßig zu erwartenden Umfang erbracht, etwa weil er deutlich langsamer ist als üblich oder nicht alle Funktionen verfügbar sind."+`<p class="tn">${NUTZER_NISV} Beim Bundesland kommt es auf die Nutzer im jeweiligen Bundesland an, nicht auf die Fläche, soweit sie sich zuordnen lassen.</p>`+userNote(10, 100000)},
   c_crisis:{stage:2, regimes:()=>["NISV"],
     ref:"§ 5 Abs. 1 Z 9 NISV", law:["nisv-5-1-9","erl-5-9"],
-    short:"Krisenmanagement oder Notfallplan aktiviert?",
-    q:"Wurde wegen des Vorfalls das Krisenmanagement oder ein Notfallwiederherstellungsplan des Betriebskontinuitätsmanagements aktiviert?",
-    hint:"Eine Behandlung im regulären Incident-Prozess ist noch keine Aktivierung des Krisenmanagements."},
+    short:"Krisenmanagement aktiviert oder Eskalationsstufe erreicht?",
+    q:"Wurde wegen des Vorfalls das Krisenmanagement oder ein Notfallwiederherstellungsplan des Betriebskontinuitätsmanagements aktiviert, oder sind die internen Eskalationsstufen dafür erreicht?",
+    /* Erläuterungen zu § 5 Abs. 1 Z 9 NISV („zum gebotenen Zeitpunkt, insbesondere bei Erreichen der einschlägigen internen Eskalationsstufen“), FAQ des Bundesamts zu § 5 NISV */
+    hint:()=>`Maßgeblich sind die selbst festgelegten Eskalationsstufen. Sind sie erreicht, ist das Kriterium laut ${extLink(FAQ_NISV5_URL, "FAQ des Bundesamts zu § 5 NISV")} erfüllt. Die Erläuterungen zu § 5 NISV stellen auf die Aktivierung „zum gebotenen Zeitpunkt“ ab. Eine verspätete oder unterlassene Aktivierung schließt das Kriterium deshalb nicht aus (Auslegung). Eine Behandlung im regulären Incident-Prozess ist noch keine Aktivierung des Krisenmanagements. Ein Krisenstab wegen einer Bedrohung, etwa einer kritischen Schwachstelle, ohne eingetretenen Vorfall erfüllt das Kriterium nicht (Erläuterungen zu § 5 NISV).`},
   c_repeat:{stage:2, regimes:c=>tag(c.N,c.D),
     ref:c=>c.D?"Art. 3 Abs. 1 lit. f iVm Art. 4 DVO"+(c.N?" · umfasst § 7 NISV":""):"§ 5 Abs. 1 Z 6 iVm § 7 Z 1 bis 3 NISV",
-    law:c=>[c.N&&"nisv-5-1-6", c.N&&"nisv-7", c.D&&"dvo-3-1-f", c.D&&"dvo-4"],
+    law:c=>[c.N&&"nisv-5-1-6", c.N&&"nisv-7", c.D&&"dvo-3-1-f", c.D&&"dvo-4", c.N&&"erl-7"],
     short:"Wiederholter Vorfall über Schadensschwelle?",
     q:c=>`Gab es innerhalb von sechs Monaten mindestens zwei Vorfälle mit derselben offensichtlichen Ursache${c.D?"":" und Auswirkung"}, die zusammen die Verlustschwelle von 500.000 € bzw. 5 % überschreiten?`,
     hint:c=>(c.D
       ? "Art. 4 DVO verlangt nur dieselbe Ursache, § 7 NISV zusätzlich dieselbe Auswirkung. Gefragt wird mit dem weiteren Maßstab. Laut DVO-Anhang (3.4.2 b) ist vierteljährlich zu prüfen."
-      : "Alle drei Bedingungen kumulativ. Laut DVO-Anhang (3.4.2 b), den § 2 NISV für alle Einrichtungen anwendbar macht, ist vierteljährlich zu prüfen.")+finNote()+repeatNote()},
+      : "Alle drei Bedingungen kumulativ. Laut DVO-Anhang (3.4.2 b), den § 2 NISV für alle Einrichtungen anwendbar macht, ist vierteljährlich zu prüfen.")+(c.N?REPEAT_NISV:"")+finNote()+repeatNote()},
   q10:{stage:3, ref:"§ 35 Abs. 1 Z 1 und 2, Abs. 2 Z 1 bis 6 NISG 2026", law:["nisg-35-1","nisg-35-2"],
     short:"Schwere Störung, schwerer Verlust oder erheblicher Schaden für Dritte möglich?",
     q:"Kann der Vorfall schwerwiegende Betriebsstörungen oder schwerwiegende finanzielle Verluste für die Einrichtung verursachen, oder anderen Personen erheblichen materiellen oder immateriellen Schaden zufügen?",
-    hint:"Die Listen in NISV und DVO sind nicht abschließend. Abzuwägen sind nach § 35 Abs. 2 Z 1 bis 6:<ol><li>Abhängigkeit anderer Sektoren vom Dienst</li><li>Auswirkungen auf Umwelt, öffentliche Ordnung und Sicherheit, Gesundheit</li><li>Marktanteil der Einrichtung</li><li>betroffenes Gebiet, auch grenzüberschreitend</li><li>Kritikalität der Systeme, Art und Schwere der Bedrohung, ausgenutzte Schwachstellen</li><li>unternehmens- und sektorspezifische Faktoren</li></ol>",
+    hint:()=>`Die Listen in NISV und DVO sind nicht abschließend (für die NISV laut ${extLink(FAQ_NISV7_URL, "FAQ des Bundesamts zu § 7 NISV")}). Abzuwägen sind nach § 35 Abs. 2 Z 1 bis 6:<ol><li>Abhängigkeit anderer Sektoren vom Dienst</li><li>Auswirkungen auf Umwelt, öffentliche Ordnung und Sicherheit, Gesundheit</li><li>Marktanteil der Einrichtung</li><li>betroffenes Gebiet, auch grenzüberschreitend</li><li>Kritikalität der Systeme, Art und Schwere der Bedrohung, ausgenutzte Schwachstellen</li><li>unternehmens- und sektorspezifische Faktoren</li></ol>`,
     a:[["Ja","EVAL"],["Nein","EVAL"],["Unklar","EVAL"]]}
 };
 // Art-spezifische DVO-Fragen (t:<id>)
@@ -1106,10 +1197,6 @@ function seq(){
   if(c.N) s.push("c_outage","c_crisis");
   s.push("c_repeat","q10");
   return s;
-}
-function nextAfter(id){
-  if(id==="q2") return seq()[0];
-  const s=seq(); const i=s.indexOf(id); return s[i+1];
 }
 function answers(id){
   const n=node(id); if(n.a) return n.a;
@@ -1179,7 +1266,10 @@ const R = {
     ].filter(Boolean), ref:"§ 35 NISG 2026, DVO (EU) 2024/2690 Anhang 3.4.2", law:["nisg-35-1","nisg-37"]}),
   r_planned:()=>({tone:"go", verdict:"Nicht erheblich", title:"Planmäßige Unterbrechung",
     lead:"Planmäßige Betriebsunterbrechungen und geplante Folgen von Wartungsarbeiten gelten nicht als erhebliche Cybersicherheitsvorfälle.",
-    items:["Kommt es während der Wartung zu ungeplanten Folgen, diese als eigenen Vorfall neu bewerten."], ref:"§ 6 NISV 2026, Art. 3 Abs. 2 DVO", law:[has("nisv")&&"nisv-6", has("dvo")&&"dvo-3-2"]}),
+    items:["Kommt es während der Wartung zu ungeplanten Folgen, diese als eigenen Vorfall neu bewerten.",
+      "Wurde wegen einer Schwachstelle oder Bedrohung abgeschaltet: prüfen, ob sie schon vorher ausgenutzt wurde. Falls ja, als eigenen Vorfall neu bewerten.",
+      `Eine freiwillige Meldung der Cyberbedrohung oder des Beinahe-Vorfalls ist möglich (§ 37): ${extLink(FORMS.fm[1], "Formular Freiwillige Meldung (PDF)")}.`],
+    ref:"§ 6 NISV 2026, Art. 3 Abs. 2 DVO, § 37 NISG 2026", law:[ctx().N&&"nisv-6", has("dvo")&&"dvo-3-2", "nisg-37"]}),
   r_nearmiss:()=>({tone:"go", verdict:"Keine Meldepflicht", title:"Beinahe-Vorfall oder Cyberbedrohung",
     lead:"Ohne tatsächliche Beeinträchtigung besteht keine Meldepflicht nach § 34.",
     items:["Intern dokumentieren.",`Cyberbedrohungen und Beinahe-Cybersicherheitsvorfälle können freiwillig nach § 37 gemeldet werden: ${extLink(FORMS.fm[1], "Formular Freiwillige Meldung (PDF)")}.`,"Eine anonyme Meldung ist möglich (§ 37 Abs. 3). Sie läuft direkt über das zuständige CSIRT, nicht über Meldeportal oder Formular."], ref:"§ 3 Z 27 und 29, § 37 NISG 2026", law:["nisg-3-27","nisg-3-29","nisg-37"]}),
@@ -1211,7 +1301,7 @@ const ALSO = [
            V0001_<Datum>.txt                    je Speicherung eine neue Datei
    Jede Datei ist lesbarer Text mit einem maschinenlesbaren Block am Ende.
    ===================================================================== */
-const TOOL = {name:"NISG 2026 MeldeKompass", version:"1.1.1", date:"18.10.2026", copyright:"© 2026 Thomas Eder"};
+const TOOL = {name:"NISG 2026 MeldeKompass", version:"1.2.0", date:"23.10.2026", copyright:"© 2026 Thomas Eder"};
 const DATA_DIR = "NIS-Daten";
 const MARK_START = "### MASCHINENLESBARE DATEN – BITTE NICHT VERÄNDERN ###";
 const MARK_END = "### ENDE DER DATEN ###";
@@ -1248,7 +1338,7 @@ async function parseFile(txt){
   let data; try{ data = JSON.parse(json); }catch(e){ return null; }
   let intact = null;
   if(hash && hash!=="nicht verfügbar"){ const h = await sha256(json); intact = h ? h===hash : null; }
-  return {data, intact};
+  return {data, intact, hash: hash && hash!=="nicht verfügbar" ? hash : null};
 }
 const stamp = (d=new Date()) => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`;
 const slug = s => (s||"Vorfall").normalize("NFKD").replace(/[̀-ͯ]/g,"").replace(/ß/g,"ss").replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,40) || "Vorfall";
@@ -1348,12 +1438,53 @@ function startMemEmpty(){ memFiles.clear(); storeMode="mem"; storeReady=true; st
 
 /* ---------- Vorbereitung ---------- */
 async function readProfile(){
+  profileOld = false;
   const cur = await parseFile(await readText("vorbereitung/vorbereitung.txt"));
-  if(cur) return cur.data;
+  if(cur) return upgradeProfile(cur.data);
   const vs = await listProfileVersions();
   if(!vs.length) return null;
   const last = await parseFile(await readText("vorbereitung/versionen/"+vs[0].file));
-  return last ? last.data : null;
+  return last ? upgradeProfile(last.data) : null;
+}
+/* Personen stehen zentral in personen[]; jede Stelle verweist mit p, v1, v2 (Person, 1. und 2. Vertretung) auf deren id.
+   Bis 1.1.1 standen Name, Funktion und ein gemeinsames Feld für E-Mail und Telefon bei jeder Stelle. Die Übernahme legt je Name
+   eine Person an und trennt E-Mail-Adressen vom Rest. Die alten Versionsdateien bleiben unverändert. */
+let profileOld = false;            // geladene Vorbereitung im alten Format; die nächste Speicherung legt eine neue Version an
+function splitKontakt(s){
+  const t = String(s||""), mails = t.match(/[^\s<>(),;:]+@[^\s<>(),;:]+/g) || [];
+  const rest = mails.reduce((a,m)=>a.replace(m,","), t).split(/[,;\n]/).map(x=>x.trim()).filter(x=>x && !/^(e-?mail|mail)\s*:?$/i.test(x));
+  return {email: mails.join(", "), tel: rest.join(", ")};
+}
+function upgradeProfile(d){
+  if(!d || Array.isArray(d.personen)) return d;
+  const P = [], q = clone(d);
+  const join = (a, b) => !b || a.includes(b) ? a : [a, b].filter(Boolean).join(", ");
+  const add = (x) => {
+    const name = String(x?.name||"").trim(), funktion = String(x?.funktion||"").trim(), {email, tel} = splitKontakt(x?.kontakt);
+    if(!name && !funktion && !email && !tel) return "";
+    let e = name && P.find(y=>y.name===name);
+    if(!e){ e = {id:"P"+(P.length+1), name, org:"", funktion:"", email:"", tel:"", notiz:""}; P.push(e); }
+    if(!e.funktion) e.funktion = funktion;
+    e.email = join(e.email, email); e.tel = join(e.tel, tel);
+    return e.id;
+  };
+  // Freitext „Name, Erreichbarkeit“ (Standardrollen, Vertretung bei Freigaben)
+  const text = s => { const t = String(s||"").trim(), i = t.indexOf(","); return i<0 ? {name:t} : {name:t.slice(0,i), kontakt:t.slice(i+1)}; };
+  const slot = (p="", v1="") => ({p, v1, v2:""});
+  q.stellen = {haupt:slot(add(d.haupt)), im:slot(add(text(d.rollen?.im))), doku:slot(add(text(d.rollen?.doku)))};
+  EXTERN.forEach(([k])=>{ q.stellen[k] = slot(add(d.extern?.[k])); });
+  q.ansprech = (d.weitere||[]).map(add).filter(Boolean).map(p=>({p}));
+  const usp = (d.usp||[]).filter(x=>x && (x.name||x.kontakt));
+  q.meldeportal = usp.filter(x=>x.rolle!=="Vertretung").map(x=>slot(add(x)));
+  if(!q.meldeportal.length) q.meldeportal.push(slot());
+  const s0 = q.meldeportal[0];
+  usp.filter(x=>x.rolle==="Vertretung").map(add).forEach(id=>{ if(!s0.p) s0.p=id; else if(!s0.v1) s0.v1=id; else if(!s0.v2) s0.v2=id; else q.meldeportal.push(slot(id)); });
+  q.freigaben = (d.approvals||[]).filter(x=>x && (x.name||x.kontakt||x.vertretung)).map(x=>({...slot(add(x), add(text(x.vertretung))), aktion:x.aktion||"freigeben", zeitpunkt:x.zeitpunkt||"vor-fw"}));
+  q.stellenWeitere = [];
+  q.personen = P;
+  ["haupt","rollen","weitere","usp","approvals","extern"].forEach(k=>delete q[k]);
+  profileOld = true;
+  return q;
 }
 async function listProfileVersions(){
   return (await listDir("vorbereitung/versionen")).filter(e=>e.kind==="file").map(e=>{ const m=e.name.match(/^Vorbereitung_V(\d{4})_/); return m?{file:e.name, version:+m[1]}:null; }).filter(Boolean).sort((a,b)=>b.version-a.version);
@@ -1362,13 +1493,14 @@ async function saveProfile(p){
   const vs = await listProfileVersions();
   const latest = vs[0]?.version || 0;
   const strip = o => { const c = clone(o); delete c.updatedAt; delete c.version; delete c.format; delete c.tool; return stable(c); };
-  if(profile && latest && strip(profile)===strip(p)) return {changed:false, version:latest};
+  if(profile && latest && !profileOld && strip(profile)===strip(p)) return {changed:false, version:latest};
   const n = latest + 1, now = new Date();
   const data = {format:"nis-meldepflicht/vorbereitung", tool:TOOL.version, ...clone(p), version:n, updatedAt:now.toISOString()};
   const text = await buildFile(`VORBEREITUNG NISG 2026 MELDEKOMPASS · ${p.name||"Einrichtung"} · Version ${n}`, profileText(data), data);
   const file = `Vorbereitung_V${String(n).padStart(4,"0")}_${stamp(now)}.txt`;
   await writeText("vorbereitung/versionen/"+file, text, {createOnly:true});
   await writeText("vorbereitung/vorbereitung.txt", text, {download:false});
+  profileOld = false;
   return {changed:true, version:n, data, file};
 }
 function profileText(p){
@@ -1379,12 +1511,18 @@ function profileText(p){
   line("Arten der Einrichtung", (p.types||[]).filter(k=>T[k]).map(k=>T[k].label).join(", "));
   line("Jahresumsatz Vorjahr (€)", p.umsatz); line("Nutzer der Dienste", p.nutzer);
   L.push("");
-  L.push("ANSPRECHPERSONEN"); line("Hauptansprechperson", [p.haupt?.name,p.haupt?.funktion,p.haupt?.kontakt].filter(Boolean).join(", "));
-  line("Incident Manager (Standard)", p.rollen?.im); line("Dokumentationsverantwortliche/r (Standard)", p.rollen?.doku);
-  filled(p.weitere).forEach(x=>line("Weitere Ansprechperson", [x.name,x.funktion,x.kontakt].filter(Boolean).join(", "))); L.push("");
-  L.push("ZUGANG ZUM MELDEPORTAL (USP)"); line("Verschlüsselte E-Mail mit CSIRTs", p.krypto==="ja"?"eingerichtet":"noch nicht eingerichtet"); filled(p.usp).forEach(x=>line(x.rolle||"Zugang", [x.name,x.funktion,x.kontakt].filter(Boolean).join(", "))); L.push("");
-  L.push("INFORMATION UND FREIGABE"); filled(p.approvals).forEach(x=>line(`${x.aktion==="freigeben"?"Gibt frei":"Wird informiert"} (${({"vor-fw":"vor der Frühwarnung","vor-meld":"vor der Meldung","nach":"nach der Meldung"})[x.zeitpunkt||"vor-fw"]})`, [x.name,x.funktion,x.kontakt,x.vertretung?"Vertretung: "+x.vertretung:""].filter(Boolean).join(", "))); L.push("");
-  L.push("WEITERE STELLEN"); [["dsb","Datenschutzbeauftragte/r"],["ir","Incident Response"],["versicherung","Cyberversicherung"],["recht","Rechtsberatung"],["kommunikation","Kommunikation"]].forEach(([k,l])=>{ const e=p.extern?.[k]; if(e?.name||e?.kontakt) line(l, [e.name,e.kontakt].filter(Boolean).join(", ")); });
+  const st = p.stellen||{}, sl = s => slotText(p, s), info = s => [sl(s), s?.hinweis].filter(Boolean).join("; ");
+  L.push("PERSONEN"); (p.personen||[]).forEach(x=>line(pLabel(x), [x.name?x.org:"", x.funktion, x.email&&"E-Mail "+x.email, x.tel&&"Telefon "+x.tel, x.notiz&&"Anmerkung "+x.notiz].filter(Boolean).join(", ")));
+  if(!(p.personen||[]).length) line("Personen", ""); L.push("");
+  L.push("ANSPRECHPERSONEN"); line("Hauptansprechperson", sl(st.haupt));
+  line("Incident Manager (Standard)", sl(st.im)); line("Dokumentationsverantwortliche/r (Standard)", sl(st.doku));
+  (p.ansprech||[]).filter(a=>pers(p,a.p)).forEach(a=>line("Weitere Ansprechperson", pLabel(pers(p,a.p)))); L.push("");
+  L.push("ZUGANG ZUM MELDEPORTAL (USP)"); line("Verschlüsselte E-Mail mit CSIRTs", p.krypto==="ja"?"eingerichtet":"noch nicht eingerichtet"); (p.meldeportal||[]).filter(s=>slotFilled(p,s)).forEach(s=>line("Zugang", sl(s))); L.push("");
+  L.push("INFORMATION UND FREIGABE"); (p.freigaben||[]).filter(s=>slotFilled(p,s)).forEach(x=>line(`${x.aktion==="freigeben"?"Gibt frei":"Wird informiert"} (${WHEN[x.zeitpunkt||"vor-fw"].replace(/^V/,"v")})`, sl(x))); L.push("");
+  L.push("WEITERE STELLEN"); EXTERN.forEach(([k,l])=>{ if(info(st[k])) line(l, info(st[k])); });
+  (p.stellenWeitere||[]).filter(s=>s.bez||info(s)).forEach(s=>line(s.bez||"Weitere Stelle", info(s))); L.push("");
+  L.push("EMPFÄNGER DER DIENSTE"); line("Vorgehen", p.empfMethodik);
+  empfList(p).forEach(e=>line(e.bez||"Empfänger", [EMPF_ART[e.art], e.dienst&&"Dienst "+e.dienst, e.daten&&"Daten "+e.daten, e.anzahl&&"ca. "+e.anzahl, EMPF_PRIO[e.prio], e.kanal&&"Kommunikationsweg "+e.kanal, e.quelle&&"Kontaktdaten in "+e.quelle, pers(p,e.kontakt)&&"Kontakt "+pLabel(pers(p,e.kontakt)), slotFilled(p,e)&&"unterrichtet durch "+slotText(p,e), e.hinweis].filter(Boolean).join("; ")));
   if(p.notizen){ L.push("", "HINWEISE", p.notizen); }
   return L.join("\n");
 }
@@ -1411,7 +1549,7 @@ async function listVersionFiles(id){
   const out = [];
   for(const v of await listVersionNames(id)){
     const p = await parseFile(await readText(`vorfaelle/${id}/${v.file}`));
-    out.push({file:v.file, version:v.version, savedAt:p?.data?.savedAt, savedBy:p?.data?.savedBy||"", note:p?.data?.note||"", result:p?.data?.result||null, intact:p?p.intact:false});
+    out.push({file:v.file, version:v.version, savedAt:p?.data?.savedAt, savedBy:p?.data?.savedBy||"", note:p?.data?.note||"", result:p?.data?.result||null, intact:p?p.intact:false, hash:p?.hash||null});
   }
   return out;
 }
@@ -1518,17 +1656,21 @@ const LS_USER = "meldekompass-user";
 let userName = (()=>{ try{ return localStorage.getItem(LS_USER)||""; }catch(e){ return ""; } })();
 let editingUser = false;
 function setUserName(n){ userName = String(n||"").trim(); try{ userName ? localStorage.setItem(LS_USER, userName) : localStorage.removeItem(LS_USER); }catch(e){} }
-let actions = [];               // Vorfall: [{id, ts, typ, text, wer}]
+let actions = [];               // Vorfall: [{id, ts, typ, text, wer, geaendert?}]
 let actTsEdited = false;        // Zeitpunkt im Aktionsformular von Hand geändert
+let actEdit = null;             // Aktion, die gerade bearbeitet wird (id)
 const ACTTYPES = ["Neue Information","Entscheidung","Maßnahme","Kommunikation intern","Kommunikation extern","Meldung an Behörde oder CSIRT","Eskalation","Sonstiges"];
+/* Farbe je Art (Klassen at-… in style.css); unbekannte Arten aus älteren Dateien wie „Sonstiges“ */
+const ACTCLS = {"Neue Information":"info","Entscheidung":"ent","Maßnahme":"mass","Kommunikation intern":"kint","Kommunikation extern":"kext","Meldung an Behörde oder CSIRT":"meld","Eskalation":"esk","Sonstiges":"sonst"};
+const actCls = t => "at-"+(ACTCLS[t]||"sonst");
 const secLabel = id => T[id].label===T[id].sector ? T[id].sector : `${T[id].sector} / ${T[id].label}`;
 let gnote = "";                 // Anmerkung zum Ergebnis
 let stepsDone = {};             // erledigte Schritte (nur Vorfall)
 
 function resetCheck(prefill){
-  path=[]; cur="qs"; qnotes={}; gnote=""; stepsDone={}; selUnclear=false;
+  path=[]; cur="qs"; prevAns={}; qnotes={}; gnote=""; stepsDone={}; selUnclear=false;
   sel = new Set(prefill && profile?.types?.length ? profile.types.filter(id=>T[id]) : []);
-  TE = nowMin(); TF = null; TM = null; rep = {}; mgmt = {}; docu = {}; actions = [];
+  TE = nowMin(); TF = null; TM = null; rep = {}; mgmt = {}; docu = {}; actions = []; actEdit = null;
 }
 
 /* =====================================================================
@@ -1592,7 +1734,8 @@ function stepData(mode){
   if(mode==="report") S.push({key:"empf", when:null, label:"Unverzüglich", title:"Empfänger der Dienste informieren", items:[
     "Nur wenn die Erbringung des Dienstes beeinträchtigt ist: Empfänger über den Vorfall unterrichten",
     "Maßnahmen oder Abhilfemaßnahmen mitteilen, die sie selbst ergreifen können",
-    "Zeitpunkt und Inhalt dokumentieren; die Meldung fragt ab, ob das geschehen ist"
+    "Zeitpunkt und Inhalt dokumentieren; die Meldung fragt ab, ob das geschehen ist",
+    ...(empfFirst(profile).length ? [`Laut Vorbereitung zuerst: ${empfFirst(profile).join(", ")}`] : [])
   ], ref:"§ 34 Abs. 3 NISG 2026"});
   if(mode==="report") S.push({key:"meld", forms:["meld"], when:meld, label: trust ? "≤ 24 Std." : "≤ 72 Std.", title:"Meldung an das CSIRT", items:[
     "Angaben der Frühwarnung aktualisieren; ob der Vorfall noch andauert oder wann er behoben wurde",
@@ -1682,30 +1825,83 @@ function stepsText(){
 /* =====================================================================
    Handlungsanleitung aus der Vorbereitung
    ===================================================================== */
-const person = (p) => [p?.name, p?.funktion].filter(Boolean).map(esc).join(", ");
-const contact = (p) => p?.kontakt ? `<span class="sel">${esc(p.kontakt)}</span>` : `<span class="miss">Kontakt fehlt</span>`;
-const filled = (arr) => (arr||[]).filter(p=>p && (p.name||p.kontakt));
+/* Personen und Stellen: Stelle = {p, v1, v2} mit ids aus pr.personen */
+const SLOT = [["p","Person"],["v1","1. Vertretung"],["v2","2. Vertretung"]];
+const ROLES = [["haupt","Hauptansprechperson"],["im","Incident Manager"],["doku","Dokumentationsverantwortliche/r"]];
+const EXTERN = [["dsb","Datenschutzbeauftragte/r","bei personenbezogenen Daten, DSGVO-Frist 72 Std."],["ir","Incident-Response-Dienstleister",""],["versicherung","Cyberversicherung","Meldepflichten laut Polizze beachten"],["recht","Rechtsberatung",""],["kommunikation","Kommunikation / Pressestelle","vor jeder externen Aussage"]];
+const WHEN = {"vor-fw":"Vor der Frühwarnung", "vor-meld":"Vor der Meldung", "nach":"Nach der Meldung"};
+/* Empfänger der Dienste (§ 34 Abs. 3 NISG 2026): einzelne Empfänger oder Gruppen; kontakt = Person beim Empfänger, p/v1/v2 = wer unterrichtet */
+const EMPF_ART = {privat:"Privatpersonen", unternehmen:"Unternehmen", oeffentlich:"Öffentliche Stellen", gemischt:"Gemischt"};
+const EMPF_PRIO = {zuerst:"Zuerst unterrichten", danach:"Danach unterrichten"};
+const empfList = pr => (pr?.empfaenger||[]).filter(e=>e && (e.bez || e.dienst || e.daten || e.kanal || e.quelle || e.hinweis || pers(pr, e.kontakt) || slotFilled(pr, e)))
+  .map((e,i)=>({e,i})).sort((a,b)=>({zuerst:0, danach:1}[a.e.prio]??2) - ({zuerst:0, danach:1}[b.e.prio]??2) || a.i-b.i).map(x=>x.e);
+const empfFirst = pr => empfList(pr).filter(e=>e.prio==="zuerst" && e.bez).map(e=>e.bez);
+const pers = (pr, id) => id && (pr?.personen||[]).find(x=>x.id===id) || null;
+const pLabel = x => x ? (x.name || x.org || "Person ohne Namen") : "";
+const pDesc = x => x ? [x.name || x.org, x.funktion, x.name ? x.org : ""].filter(Boolean) : [];
+const pKontakt = x => [x?.email, x?.tel].filter(Boolean).join(", ");
+const pLine = x => [...pDesc(x), pKontakt(x)].filter(Boolean).join(", ");
+const slotPeople = (pr, s) => SLOT.map(([k])=>pers(pr, s?.[k])).filter(Boolean);
+const slotFilled = (pr, s) => slotPeople(pr, s).length > 0;
+const slotText = (pr, s) => SLOT.map(([k,l])=>{ const x = pers(pr, s?.[k]); return !x ? "" : k==="p" ? pLabel(x) : `${l}: ${pLabel(x)}`; }).filter(Boolean).join("; ");
+/* Wo eine Person eingetragen ist */
+function personUse(pr, id){
+  const U = [], st = pr.stellen||{};
+  const chk = (s, l) => SLOT.forEach(([k,sl])=>{ if(id && s?.[k]===id) U.push(k==="p" ? l : `${l} (${sl})`); });
+  ROLES.forEach(([k,l])=>chk(st[k], l));
+  (pr.ansprech||[]).forEach(a=>chk(a, "Weitere Ansprechperson"));
+  (pr.meldeportal||[]).forEach(s=>chk(s, "Meldeportal"));
+  (pr.freigaben||[]).forEach(s=>chk(s, s.aktion==="informieren" ? "Wird informiert" : "Gibt frei"));
+  EXTERN.forEach(([k,l])=>chk(st[k], l));
+  (pr.stellenWeitere||[]).forEach(s=>chk(s, s.bez||"Weitere Stelle"));
+  (pr.empfaenger||[]).forEach(e=>{ const l = `Empfänger ${e.bez||"ohne Bezeichnung"}`; if(id && e.kontakt===id) U.push(`${l} (Kontakt)`); chk(e, `${l}, unterrichtet durch`); });
+  return U;
+}
+/* Formularfeld „Weitere Ansprechpersonen“: Vertretungen der Hauptansprechperson, dann die weiteren Ansprechpersonen */
+function weitereAnsprech(pr){
+  const h = pr.stellen?.haupt||{}, seen = new Set([h.p].filter(Boolean)), L = [];
+  const push = (id, note) => { const x = pers(pr, id); if(!x || seen.has(id)) return; seen.add(id); L.push(pLine(x) + (note ? ` (${note})` : "")); };
+  push(h.v1, "1. Vertretung der Hauptansprechperson"); push(h.v2, "2. Vertretung der Hauptansprechperson");
+  (pr.ansprech||[]).forEach(a=>push(a.p));
+  return L.join("; ");
+}
+const person = x => pDesc(x).map(esc).join(", ");
+const contact = x => pKontakt(x) ? `<span class="sel">${esc(pKontakt(x))}</span>` : `<span class="miss">Kontakt fehlt</span>`;
+function slotLi(pr, s, badge, notes=[]){
+  const x = pers(pr, s?.p);
+  return `<li>${badge}<span>${x ? person(x) : `<span class="miss">Person fehlt</span>`}</span>${x ? contact(x) : ""}${notes.filter(Boolean).map(n=>`<span class="ref">${esc(n)}</span>`).join("")}${x?.notiz ? `<span class="ref dep">Anmerkung: ${nl2br(x.notiz)}</span>` : ""}${SLOT.slice(1).map(([k,l])=>{ const d = pers(pr, s?.[k]); return d ? `<span class="ref dep">${l}: ${esc(pLine(d))}</span>` : ""; }).join("")}</li>`;
+}
+function empfLi(pr, e){
+  const k = pers(pr, e.kontakt);
+  const meta = [EMPF_ART[e.art], e.dienst && "Dienst: "+e.dienst, e.anzahl && "ca. "+e.anzahl].filter(Boolean);
+  const lines = [e.daten && "Betroffene Daten: "+e.daten, k && "Kontakt beim Empfänger: "+pLine(k), e.kanal && "Kommunikationsweg: "+e.kanal, e.quelle && "Kontaktdaten: "+e.quelle, e.hinweis,
+    ...SLOT.map(([sk,l])=>{ const x = pers(pr, e[sk]); return x ? `${sk==="p" ? "Unterrichtet durch" : l}: ${pLine(x)}` : ""; })].filter(Boolean);
+  return `<li><span class="badge ${e.prio==="zuerst"?"rel":"inf"}">${e.prio==="zuerst"?"Zuerst":e.prio==="danach"?"Danach":"Empfänger"}</span><span>${esc(e.bez||"Ohne Bezeichnung")}</span>${meta.length?`<span class="ref">${esc(meta.join(" · "))}</span>`:""}${lines.map(t=>`<span class="ref dep">${nl2br(t)}</span>`).join("")}</li>`;
+}
 function guideGaps(pr, types){
   const g=[];
   if(!pr.name) g.push("Name der Einrichtung");
   if(!pr.kennziffer) g.push("Identifikationskennziffer");
-  if(!pr.haupt?.name || !pr.haupt?.kontakt) g.push("Hauptansprechperson mit Kontakt");
-  const usp = filled(pr.usp);
-  if(!usp.length) g.push("Personen mit Zugang zum Meldeportal (USP)");
-  else if(usp.length<2) g.push("Vertretung für den USP-Zugang (nur eine Person hinterlegt)");
-  if(!filled(pr.approvals).some(a=>a.aktion==="freigeben")) g.push("Wer die Meldung freigibt");
+  const h = pers(pr, pr.stellen?.haupt?.p);
+  if(!h?.name || !pKontakt(h)) g.push("Hauptansprechperson mit Kontakt");
+  const usp = new Set((pr.meldeportal||[]).flatMap(s=>slotPeople(pr, s)));
+  if(!usp.size) g.push("Personen mit Zugang zum Meldeportal (USP)");
+  else if(usp.size<2) g.push("Vertretung für den USP-Zugang (nur eine Person hinterlegt)");
+  if(!(pr.freigaben||[]).some(a=>a.aktion==="freigeben" && pers(pr, a.p))) g.push("Wer die Meldung freigibt");
+  if(!pr.empfMethodik?.trim() && !empfList(pr).length) g.push("Vorgehen zur Unterrichtung der Empfänger der Dienste");
   if(!(types||[]).length) g.push("Arten der Einrichtung");
   if(pr.krypto!=="ja") g.push("Verschlüsselte E-Mail mit den CSIRTs");
   return g;
 }
 function formFields(pr, types, title){
   const sectors = [...new Set((types||[]).map(id=>T[id]).filter(Boolean).map(t=>FORMSECTOR[t.sector]||t.sector))];
+  const h = pers(pr, pr.stellen?.haupt?.p);
   const rows = [
     ["Name der Einrichtung", pr.name],
     ["Identifikationskennziffer", pr.kennziffer],
-    ["Hauptansprechperson", [pr.haupt?.name, pr.haupt?.funktion].filter(Boolean).join(", ")],
-    ["Kontakt Hauptansprechperson", pr.haupt?.kontakt],
-    ["Weitere Ansprechpersonen", filled(pr.weitere).map(p=>[p.name,p.funktion,p.kontakt].filter(Boolean).join(", ")).join("; ")],
+    ["Hauptansprechperson", pDesc(h).join(", ")],
+    ["Kontakt Hauptansprechperson", pKontakt(h)],
+    ["Weitere Ansprechpersonen", weitereAnsprech(pr)],
     ["Betroffene Sektoren", sectors.join("; ")],
     ["Vertrauensdienst betroffen", (types||[]).includes("trust") ? "Ja" : "Nein"],
     ["Bezeichnung des Vorfalls", title || ""],
@@ -1718,24 +1914,24 @@ function guideHTML(pr, types, opts={}){
   if(!pr){
     return `<div class="guide empty"><h3>Handlungsanleitung</h3><p>Noch keine Vorbereitung gespeichert. Mit einer Vorbereitung stehen hier, wer informiert wird, wer freigibt, wer im Meldeportal meldet und welche Angaben ins Formular gehören.</p><button type="button" class="btn alt" data-go="prep">Zur Vorbereitung</button></div>`;
   }
-  const approvals = filled(pr.approvals);
-  const when = [["vor-fw","Vor der Frühwarnung"],["vor-meld","Vor der Meldung"],["nach","Nach der Meldung"]];
-  const usp = filled(pr.usp);
+  const approvals = (pr.freigaben||[]).filter(s=>slotFilled(pr, s));
+  const usp = (pr.meldeportal||[]).filter(s=>slotFilled(pr, s));
   const csirts = [...new Set((types||[]).map(id=>T[id]).filter(t=>t && t.g!=="dora").map(t=>t.csirt))];
-  const ext = pr.extern||{};
-  const extRows = [["dsb","Datenschutzbeauftragte/r","bei personenbezogenen Daten, DSGVO-Frist 72 Std."],["ir","Incident-Response-Dienstleister",""],["versicherung","Cyberversicherung","Meldepflichten laut Polizze beachten"],["recht","Rechtsberatung",""],["kommunikation","Kommunikation / Pressestelle","vor jeder externen Aussage"]]
-    .filter(([k])=>ext[k]?.name||ext[k]?.kontakt);
+  const st = pr.stellen||{};
+  const extRows = [...EXTERN.map(([k,l,n])=>({s:st[k], l, n})), ...(pr.stellenWeitere||[]).filter(s=>s.bez).map(s=>({s, l:s.bez, n:""}))]
+    .filter(r=>slotFilled(pr, r.s) || r.s?.hinweis);
   const gaps = guideGaps(pr, types);
   const rows = formFields(pr, types, opts.title);
+  const empf = empfList(pr);
   return `<div class="guide">
     <div class="ghead"><span class="eyebrow">Handlungsanleitung</span><h3>${esc(pr.name||"Ihre Einrichtung")}</h3>${pr.einstufung?`<span class="ref">${pr.einstufung==="wesentlich"?"Wesentliche Einrichtung":pr.einstufung==="wichtig"?"Wichtige Einrichtung":"Einstufung offen"}${pr.kennziffer?" · "+esc(pr.kennziffer):""}</span>`:""}</div>
     ${gaps.length?`<p class="gap">In der Vorbereitung fehlt: ${gaps.map(esc).join(", ")}. <button type="button" class="link" data-go="prep">Ergänzen</button></p>`:""}
     <ol class="gsteps">
       <li><h4>Intern informieren und Freigabe einholen</h4>
-        ${approvals.length ? when.map(([k,l])=>{ const list=approvals.filter(a=>(a.zeitpunkt||"vor-fw")===k); return list.length?`<p class="gl">${l}</p><ul class="people">${list.map(a=>`<li><span class="badge ${a.aktion==="freigeben"?"rel":"inf"}">${a.aktion==="freigeben"?"Freigabe":"Information"}</span><span>${person(a)}</span>${contact(a)}${a.vertretung?`<span class="ref">Vertretung: ${esc(a.vertretung)}</span>`:""}</li>`).join("")}</ul>`:""; }).join("") : `<p class="miss">Niemand hinterlegt.</p>`}
+        ${approvals.length ? Object.entries(WHEN).map(([k,l])=>{ const list=approvals.filter(a=>(a.zeitpunkt||"vor-fw")===k); return list.length?`<p class="gl">${l}</p><ul class="people">${list.map(a=>slotLi(pr, a, `<span class="badge ${a.aktion==="informieren"?"inf":"rel"}">${a.aktion==="informieren"?"Information":"Freigabe"}</span>`)).join("")}</ul>`:""; }).join("") : `<p class="miss">Niemand hinterlegt.</p>`}
         <p class="note">Empfehlung: Interne Freigaben verlängern die gesetzlichen Fristen nicht. Ist eine freigebende Person nicht rechtzeitig erreichbar, die Frühwarnung fristgerecht abgeben und die Freigabe nachholen.</p></li>
       <li><h4>Im Meldeportal melden</h4>
-        ${usp.length?`<ul class="people">${usp.map(p=>`<li><span class="badge ${p.rolle==="Vertretung"?"inf":"rel"}">${esc(p.rolle||"Zugang")}</span><span>${person(p)}</span>${contact(p)}</li>`).join("")}</ul>`:`<p class="miss">Keine Person mit USP-Zugang hinterlegt.</p>`}
+        ${usp.length?`<ul class="people">${usp.map(s=>slotLi(pr, s, `<span class="badge rel">Zugang</span>`)).join("")}</ul>`:`<p class="miss">Keine Person mit USP-Zugang hinterlegt.</p>`}
         <p>NIS-Meldeportal im Unternehmensserviceportal: <a href="${PORTAL}" target="_blank" rel="noopener">Meldeportal öffnen</a></p>
         ${(types||[]).includes("verwaltung")?`<p class="hint">${VERW_NOTE}</p>`:""}
         <p class="note">Ist das Portal technisch nicht erreichbar, das PDF-Formular des Bundesamts verschlüsselt an das zuständige CSIRT senden. Alle Formulare: ${extLink(FORMS_PAGE, "Bundesamt für Cybersicherheit – Recht und Dokumente")}.</p>
@@ -1744,8 +1940,12 @@ function guideHTML(pr, types, opts={}){
       <li><h4>Angaben für das Formular</h4>
         <dl class="kv">${rows.map(([k,v])=>`<dt>${k}</dt><dd>${v?esc(v):k==="Weitere Ansprechpersonen"?"– (optional)":`<span class="miss">${["Bezeichnung des Vorfalls","Vorfall erstmals erkannt","Interner Vorfall-Referenzcode"].includes(k)?"beim Vorfall eintragen":"fehlt"}</span>`}</dd>`).join("")}</dl>
         <button type="button" class="link" data-copy="form">Angaben als Text kopieren</button></li>
+      <li><h4>Empfänger der Dienste unterrichten</h4>
+        <p class="hint">Nur soweit der Vorfall die Erbringung eines Dienstes beeinträchtigt: die Empfänger unverzüglich unterrichten und, soweit möglich, Maßnahmen mitteilen, die sie selbst ergreifen können (§ 34 Abs. 3 NISG 2026).</p>
+        ${empf.length?`<ul class="people">${empf.map(e=>empfLi(pr, e)).join("")}</ul>`:`<p class="miss">Keine Empfänger hinterlegt.</p>`}
+        ${pr.empfMethodik?.trim()?`<p class="note">Vorgehen laut Vorbereitung: ${nl2br(pr.empfMethodik)}</p>`:""}</li>
       <li><h4>Weitere Stellen einbinden</h4>
-        ${extRows.length?`<ul class="people">${extRows.map(([k,l,n])=>`<li><span class="badge inf">${l}</span><span>${esc(ext[k].name||"")}</span>${contact(ext[k])}${n?`<span class="ref">${n}</span>`:""}</li>`).join("")}</ul>`:`<p class="miss">Keine weiteren Stellen hinterlegt.</p>`}</li>
+        ${extRows.length?`<ul class="people">${extRows.map(r=>slotLi(pr, r.s, `<span class="badge inf">${esc(r.l)}</span>`, [r.s?.hinweis, r.n])).join("")}</ul>`:`<p class="miss">Keine weiteren Stellen hinterlegt.</p>`}</li>
     </ol>
     ${pr.notizen?`<p class="note">Hinweis aus der Vorbereitung: ${nl2br(pr.notizen)}</p>`:""}
   </div>`;
@@ -1765,16 +1965,18 @@ const selSummary = () => {
 };
 function trailHTML(){
   if(!path.length) return "";
-  return `<ol class="trail">${path.map((p,i)=>`<li><span class="n">${i+1}</span><span class="tq"><button type="button" data-jump="${i}" title="Zu dieser Frage zurück">${val(node(p.id).short)}</button>${qnotes[p.id]?`<span class="tnote">${esc(qnotes[p.id])}</span>`:""}</span><span class="yn${p.unclear?" u":""}">${esc(p.ans)}</span></li>`).join("")}</ol>`;
+  return `<ol class="trail">${path.map((p,i)=>`<li${p.id===cur?` class="on" aria-current="step"`:""}><span class="n">${i+1}</span><span class="tq"><button type="button" data-jump="${i}" title="Zu dieser Frage zurück">${val(node(p.id).short)}</button>${qnotes[p.id]?`<span class="tnote">${esc(qnotes[p.id])}</span>`:""}</span><span class="yn${p.unclear?" u":""}">${esc(p.ans)}</span></li>`).join("")}</ol>`;
 }
 /* ---------- Wortlaut der Vorschriften (Daten in rechtstexte.js) ---------- */
 const LAW_ORDER = Object.keys(LAW);
 const LAW_NOTE = "Nicht amtliche Wiedergabe. Maßgeblich ist die kundgemachte Fassung.";
 const lawSrc = k => LAW[k].src || LAW[LAW[k].up].src;
-/* gültige Schlüssel ohne Doppel, in der Reihenfolge von rechtstexte.js (Gesetz, Verordnung, DVO, Erläuterungen) */
+/* gültige Schlüssel ohne Doppel, in der Reihenfolge von rechtstexte.js (Gesetz, Verordnung, DVO, Erläuterungen, Erwägungsgründe) */
 const lawSort = keys => [...new Set((keys||[]).filter(k=>k && LAW[k]))].sort((a,b)=>LAW_ORDER.indexOf(a)-LAW_ORDER.indexOf(b));
 const lawKeys = n => lawSort(val(n?.law));
-const lawNorm = keys => lawSort(keys).filter(k=>lawSrc(k)!=="erl");
+/* Auslegungshilfen (Erläuterungen, Erwägungsgründe) sind keine Vorschriften */
+const lawAid = k => !!LAW_SRC[lawSrc(k)].aid;
+const lawNorm = keys => lawSort(keys).filter(k=>!lawAid(k));
 /* Zeilen einrücken: Ziffern „1.“ eine Stufe, Buchstaben unter Ziffern zwei Stufen */
 function lawLines(t){
   const num = t.some(l=>/^\d{1,2}\. /.test(l));
@@ -1791,7 +1993,7 @@ function lawHTML(keys, ids){
       if(!e.up){ if(seen.has(k)) return ""; seen.add(k); h += `<p class="lawr">${e.ref}</p>`; }
       return h + `<div${ids?` id="law-${k}"`:""}>${lawLines(e.t)}</div>`;
     }).join("");
-    return `<div class="lawsrc${s==="erl"?" erl":""}"><p class="lawh">${S.full}${S.url?` · ${extLink(S.url, S.link)}`:""}</p>${body}</div>`;
+    return `<div class="lawsrc${S.aid?" erl":""}"><p class="lawh">${S.full}${S.url?` · ${extLink(S.url, S.link)}`:""}</p>${body}</div>`;
   }).join("");
 }
 /* Wortlaut des Kriteriums und die Begriffe, auf die es verweist (LAW_SRC.def), je eigener Aufklapptext */
@@ -1799,8 +2001,9 @@ const lawDef = k => !!LAW_SRC[lawSrc(k)].def;
 const lawBoxes = (keys, label) => (keys=lawSort(keys), lawBox(keys.filter(k=>!lawDef(k)), label) + lawBox(keys.filter(lawDef), "Begriffe"));
 function lawBox(keys, label="Wortlaut"){
   keys = lawSort(keys); if(!keys.length) return "";
-  const refs = keys.filter(k=>lawSrc(k)!=="erl").map(k=>LAW[k].ref);
+  const refs = keys.filter(k=>!lawAid(k)).map(k=>LAW[k].ref);
   if(keys.some(k=>lawSrc(k)==="erl")) refs.push("Erläuterungen zur NISV");
+  refs.push(...keys.filter(k=>lawAid(k) && lawSrc(k)!=="erl").map(k=>LAW[k].ref));
   return `<details class="law"><summary>${label}: ${refs.join(" · ")}</summary>${lawHTML(keys)}<p class="lawnote">${LAW_NOTE} <button type="button" class="link" data-lawdir="all">Alle Rechtstexte</button></p></details>`;
 }
 /* Wortlaut als Text für das Protokoll */
@@ -1819,12 +2022,15 @@ function lawDirHTML(){
   return Object.entries(LAW_SRC).map(([s,S])=>`<details class="lawgrp" id="lawgrp-${s}"><summary><strong>${S.name}</strong> <span class="ref">${S.cover}</span></summary>${lawHTML(LAW_ORDER.filter(k=>lawSrc(k)===s), true)}</details>`).join("") + `<p class="note">${LAW_NOTE} Fassungen siehe Rechtsstand.</p>`;
 }
 
-function selChips(){
-  if(!sel.size) return "";
+/* Regelwerke der Prüfung, abhängig von den gewählten Arten */
+function regText(){
   const c=ctx();
   const arts=["3","4",...new Set(c.dvo.map(id=>T[id].art.replace("Art. ","")))];
-  const reg=[(c.N||c.D)&&"§ 35 NISG 2026", c.N&&"§ 5 Abs. 1 Z 1 bis 9, §§ 6 und 7 NISV", c.D&&`Art. ${arts.slice(0,-1).join(", ")} und ${arts.at(-1)} DVO`, c.F&&"DORA (§ 24 Abs. 7 NISG 2026)"].filter(Boolean).join(" + ");
-  return `<div class="selbar"><span class="ref">Geprüft nach ${reg}</span><div class="pills">${[...sel].map(id=>`<span class="pill ${T[id].g}">${secLabel(id)}</span>`).join("")}</div></div>`;
+  return [(c.N||c.D)&&"§ 35 NISG 2026", c.N&&`§ 5 Abs. 1 Z 1 bis 9, §§ 6 und 7 NISV`, c.D&&`Art. ${arts.slice(0,-1).join(", ")} und ${arts.at(-1)} DVO`, c.F&&"DORA (§ 24 Abs. 7 NISG 2026)"].filter(Boolean).join(" + ");
+}
+function selChips(){
+  if(!sel.size) return "";
+  return `<div class="selbar"><span class="ref">Geprüft nach ${regText()}</span><div class="pills">${[...sel].map(id=>`<span class="pill ${T[id].g}">${secLabel(id)}</span>`).join("")}</div></div>`;
 }
 function noteField(id){
   return `<label class="qnote" for="qnote">Anmerkung zu dieser Frage <span class="ref">optional</span>
@@ -1876,8 +2082,21 @@ function interimHTML(){
   const hits = path.filter(p=>isCrit(p.id) && p.ans==="Ja");
   const cf = conflict();
   if(cf) return `<p class="interim warn">Zwischenstand: Widerspruch in den Antworten. ${conflictText(cf)}. Bis zur Klärung ist eine Frühwarnung empfohlen. Die übrigen Fragen werden zur Dokumentation trotzdem beantwortet.</p>`;
+  if(v==="r_report" && complete()) return `<p class="interim stop">Zwischenstand: meldepflichtig (${hits.length} Kriteri${hits.length===1?"um":"en"} erfüllt). Alle Fragen sind beantwortet.</p>`;
   if(v==="r_report") return `<div class="interim stop"><p>Zwischenstand: meldepflichtig (${hits.length} Kriteri${hits.length===1?"um":"en"} erfüllt). Für eine vollständige Dokumentation die übrigen Fragen beantworten, oder gleich zum Ergebnis mit Fristenplan wechseln.</p><button type="button" class="btn" id="early">Ergebnis sofort anzeigen</button></div>`;
-  return `<p class="interim ${RESULTTONE[v]||"go"}">Zwischenstand: ${RESULTSHORT[v]}. Die übrigen Fragen werden zur Dokumentation trotzdem beantwortet.</p>`;
+  /* Kriterien nach „planmäßig“ bzw. „kein Vorfall“: § 6 NISV, Art. 3 Abs. 2 DVO; Erläuterungen zu § 5 NISV, Art. 3 Abs. 1 DVO */
+  const x = ctx(), refs = l => l.filter(Boolean).join(" / ");
+  const add = v==="r_planned" ? ` Bei den Kriterien nur ungeplante Folgen bewerten, die planmäßige Unterbrechung selbst zählt nicht (${refs([x.N&&"§ 6 NISV", x.D&&"Art. 3 Abs. 2 DVO"])}).`
+    : v==="r_nearmiss" ? ` Die Kriterien setzen einen eingetretenen Vorfall voraus (${refs([x.N&&"Erläuterungen zu § 5 NISV", x.D&&"Art. 3 Abs. 1 DVO"])}).` : "";
+  return `<p class="interim ${RESULTTONE[v]||"go"}">Zwischenstand: ${RESULTSHORT[v]}.${add} Die übrigen Fragen werden zur Dokumentation trotzdem beantwortet.</p>`;
+}
+/* Beim Bearbeiten einer schon ausgefüllten Checkliste: abschließen, sobald alles beantwortet ist, sonst zur ersten offenen Frage */
+function finishHTML(){
+  const s = order(), i = s.indexOf(cur);
+  if(!pe(cur) && !path.some(p=>s.indexOf(p.id)>i)) return "";
+  if(complete()) return `<div class="finish"><button type="button" class="btn alt" id="finish">Checkliste abschließen</button><span class="ref">Alle Fragen sind beantwortet. Die übrigen Antworten bleiben stehen.</span></div>`;
+  const o = openQs().filter(id=>id!==cur);
+  return o.length ? `<div class="finish"><span class="ref">Noch offen: ${o.map(id=>val(node(id).short)).join("; ")}</span><button type="button" class="link" data-jumpq="${esc(o[0])}">Zur ersten offenen Frage</button></div>` : "";
 }
 /* Offene Fragen, wenn die Checkliste vorzeitig beendet wurde */
 function remaining(){
@@ -1902,18 +2121,23 @@ function checkHTML(){
         ${noteField(cur)}
         <div class="answers"><button type="submit" class="btn" id="types-next" ${qsReady()?"":"disabled"}>Weiter</button><span class="ref" id="types-count">${qsStatus()}</span></div></form>`;
     } else {
-      body = `${noteField(cur)}<div class="answers">${answers(cur).map(([l,t],i)=>`<button type="button" class="btn${i===1?" alt":""}${i===2?" ghost":""}" data-ans="${l}" data-to="${t}">${l}</button>`).join("")}</div>`;
+      // aktuelle Antwort (Frage beantwortet) oder bisherige Antwort (Frage war weggefallen) markieren; erneut wählen behält sie
+      const ca = pe(cur)?.ans, old = ca==null && answers(cur).some(([l])=>l===prevAns[cur]);
+      const pa = ca ?? (old ? prevAns[cur] : null), wie = ca!=null ? "aktuelle Antwort" : "bisherige Antwort";
+      body = `${noteField(cur)}${pa?`<p class="prevnote" id="prevnote">${ca!=null?"Aktuelle":"Bisherige"} Antwort: <strong>${esc(pa)}</strong>. ${ca!=null?"Zum Beibehalten erneut wählen; die übrigen Antworten bleiben stehen.":"Zum Beibehalten erneut wählen."}</p>`:""}<div class="answers">${answers(cur).map(([l,t],i)=>`<button type="button" class="btn${i===1?" alt":""}${i===2?" ghost":""}${pa===l?" prev":""}" data-ans="${l}" data-to="${t}"${pa===l?` aria-describedby="prevnote"`:""}>${pa===l?`✓ ${l} (${wie})`:l}</button>`).join("")}</div>`;
     }
     return `<div class="card">
       <div class="stagebar" aria-hidden="true">${bar}</div>
       <div class="qmeta"><span class="eyebrow">Stufe ${n.stage+1} · ${STAGES[n.stage]}</span><span class="ref">${val(n.ref)}</span></div>
       ${regs}
-      <h2><span class="qn">${path.length+1}.</span> ${val(n.q)}</h2>
+      <h2><span class="qn">${order().indexOf(cur)+1}.</span> ${val(n.q)}</h2>
       ${interimHTML()}
       ${(h=>h?`<div class="hint">${h}</div>`:"")(val(n.hint))}
+      ${(m=>m?`<details class="more"><summary>${m.t}</summary><div class="morebox">${m.h}</div></details>`:"")(val(n.more))}
       ${lawBoxes(lawKeys(n))}
       ${body}
-      ${path.length?`<div class="tools"><button type="button" class="link" id="back">Eine Frage zurück</button><button type="button" class="link" id="reset">Neu beginnen</button></div>`:""}
+      ${finishHTML()}
+      ${path.length?`<div class="tools">${cur!=="qs"?`<button type="button" class="link" id="back">Eine Frage zurück</button>`:""}<button type="button" class="link" id="reset">Neu beginnen</button></div>`:""}
       ${n.stage>=1?selChips():""}
       ${trailHTML()}
     </div>`;
@@ -1948,7 +2172,7 @@ function checkHTML(){
     <div class="also"><h3>Unabhängig davon prüfen</h3><ul>${ALSO.map(x=>`<li>${x}</li>`).join("")}</ul></div>
     <label class="qnote" for="gnote">Anmerkungen zum Ergebnis
       <textarea id="gnote" rows="3" placeholder="Begründung der Entscheidung, nächste Schritte, Verantwortliche …">${esc(gnote)}</textarea></label>
-    <div class="tools"><button type="button" class="link" id="back">Eine Frage zurück</button><button type="button" class="link" id="reset">Neu beginnen</button>${view==="incident"?`<button type="button" class="link" data-copy="protocol">Protokoll als Text kopieren</button>`:""}</div>
+    <div class="tools"><button type="button" class="link" id="back">Eine Frage zurück</button><button type="button" class="link" id="reset">Neu beginnen</button>${view==="incident"?`<button type="button" class="link" data-copy="protocol">Protokoll als Text kopieren</button>`:""}<button type="button" class="link" id="doc-print">${view==="incident"?"Vorfallbericht":"Bericht"} drucken oder als PDF speichern</button></div>
     ${selChips()}
     ${trailHTML()}
   </div>`;
@@ -1962,6 +2186,7 @@ function typesFieldset(prefix, set){
 function renderCheck(){
   const box = $("check"); if(!box) return;
   box.replaceChildren(el(checkHTML()));
+  plRestore();
 }
 
 /* =====================================================================
@@ -1991,22 +2216,44 @@ function startHTML(){
 }
 
 /* ---------- Vorbereitung ---------- */
-const emptyProfile = () => ({name:"", rechtsform:"", kennziffer:"", anschrift:"", einstufung:"", registriert:"", types:[], umsatz:"", nutzer:"", rollen:{im:"", doku:""}, haupt:{name:"",funktion:"",kontakt:""}, weitere:[], usp:[{name:"",funktion:"",kontakt:"",rolle:"Hauptzugang"},{name:"",funktion:"",kontakt:"",rolle:"Vertretung"}], approvals:[{name:"",funktion:"",kontakt:"",aktion:"freigeben",zeitpunkt:"vor-fw",vertretung:""}], extern:{dsb:{},ir:{},versicherung:{},recht:{},kommunikation:{}}, notizen:""});
+const emptySlot = () => ({p:"", v1:"", v2:""});
+const emptyProfile = () => ({name:"", rechtsform:"", kennziffer:"", anschrift:"", einstufung:"", registriert:"", types:[], umsatz:"", nutzer:"", personen:[], stellen:Object.fromEntries([...ROLES, ...EXTERN].map(([k])=>[k, emptySlot()])), ansprech:[], meldeportal:[emptySlot()], freigaben:[{...emptySlot(), aktion:"freigeben", zeitpunkt:"vor-fw"}], stellenWeitere:[], empfMethodik:"", empfaenger:[], notizen:""});
+const NEWP = "+neu";                // Auswahl „Neue Person anlegen“
+const newPid = () => "P" + (Math.max(0, ...(pdraft.personen||[]).map(x=>+String(x.id).slice(1)||0)) + 1);
 function inp(path, label, opts={}){
   const v = getPath(pdraft, path) ?? "";
   const id = "pf-"+path.replace(/\./g,"-");
   if(opts.type==="textarea") return `<label for="${id}" class="fld ${opts.cls||""}">${label}<textarea id="${id}" data-pf="${path}" rows="${opts.rows||3}" placeholder="${esc(opts.ph||"")}">${esc(v)}</textarea></label>`;
   if(opts.options) return `<label for="${id}" class="fld ${opts.cls||""}">${label}<select id="${id}" data-pf="${path}">${opts.options.map(([k,l])=>`<option value="${k}" ${v===k?"selected":""}>${l}</option>`).join("")}</select></label>`;
-  return `<label for="${id}" class="fld ${opts.cls||""}">${label}<input id="${id}" data-pf="${path}" type="${opts.type||"text"}" value="${esc(v)}" placeholder="${esc(opts.ph||"")}" autocomplete="off"></label>`;
+  return `<label for="${id}" class="fld ${opts.cls||""}">${label}<input id="${id}" data-pf="${path}" type="${opts.type||"text"}" ${opts.im?`inputmode="${opts.im}"`:""} value="${esc(v)}" placeholder="${esc(opts.ph||"")}" autocomplete="off"></label>`;
 }
-function listRows(key, fields, addLabel){
+function rowsHTML(key, row, addLabel, cls=""){
   const rows = pdraft[key]||[];
-  return `<div class="rows">${rows.map((r,i)=>`<div class="row">${fields.map(([f,l,o])=>inp(`${key}.${i}.${f}`, l, o)).join("")}<button type="button" class="link del" data-del="${key}.${i}" aria-label="Zeile entfernen">Entfernen</button></div>`).join("")}</div>
+  return `<div class="rows">${rows.map((r,i)=>`<div class="row ${cls}">${row(`${key}.${i}`, r)}<button type="button" class="link del" data-del="${key}.${i}" aria-label="Zeile entfernen">Entfernen</button></div>`).join("")}</div>
     <button type="button" class="link" data-add="${key}">${addLabel}</button>`;
 }
+/* Personen: einmal erfassen, die Stellen verweisen darauf */
+const pOpt = x => [pLabel(x), x.funktion].filter(Boolean).join(", ");
+const useText = u => u.length ? "Eingetragen bei: " + u.map(esc).join(", ") : "Noch bei keiner Stelle eingetragen";
+function personsHTML(){
+  const ps = pdraft.personen||[];
+  return `<div class="rows">${ps.map((x,i)=>{ const u = personUse(pdraft, x.id), b = `personen.${i}`;
+    return `<div class="row block person" id="pr-${esc(x.id)}">
+      <div class="grid c3">${inp(b+".name","Name")}${inp(b+".org","Organisation")}${inp(b+".funktion","Funktion")}</div>
+      <div class="grid c2">${inp(b+".email","E-Mail",{im:"email"})}${inp(b+".tel","Telefon",{type:"tel"})}</div>
+      ${inp(b+".notiz","Notizen und Anmerkungen",{type:"textarea",rows:2,cls:"wide",ph:"z. B. Erreichbarkeit, Bereitschaft, Abwesenheiten, Hinweise zur Kontaktaufnahme"})}
+      <p class="ref puse" id="pu-${esc(x.id)}">${useText(u)}</p>
+      <button type="button" class="link del" data-del="${b}" ${u.length?"disabled":""} title="Nur möglich, wenn die Person bei keiner Stelle eingetragen ist" aria-label="Person entfernen">Entfernen</button></div>`; }).join("")}</div>
+    ${ps.length?"":`<p class="empty">Noch keine Personen erfasst.</p>`}
+    <button type="button" class="link" data-add="personen">Person hinzufügen</button>`;
+}
+function personSel(path, label, aria){
+  const v = getPath(pdraft, path) ?? "", id = "pf-"+path.replace(/\./g,"-");
+  return `<label for="${id}" class="fld">${label}<select id="${id}" data-pf="${path}" data-ps aria-label="${esc(aria+": "+label)}"><option value="">– keine –</option>${(pdraft.personen||[]).map(x=>`<option value="${esc(x.id)}" ${x.id===v?"selected":""}>${esc(pOpt(x))}</option>`).join("")}<option value="${NEWP}">+ Neue Person anlegen …</option></select></label>`;
+}
+const slotHTML = (base, aria) => SLOT.map(([k,l])=>personSel(`${base}.${k}`, l, aria)).join("");
 function prepHTML(){
   if(!pdraft) pdraft = profile ? Object.assign(emptyProfile(), clone(profile)) : emptyProfile();
-  const extF = [["dsb","Datenschutzbeauftragte/r"],["ir","Incident-Response-Dienstleister"],["versicherung","Cyberversicherung (Hotline, Polizzennr.)"],["recht","Rechtsberatung"],["kommunikation","Kommunikation / Pressestelle"]];
   return `<section class="prep">
     <h2>Vorbereitung</h2>
     <p class="lede2">Diese Angaben füllen im Ernstfall die Handlungsanleitung. Sie werden im Datenordner unter ${DATA_DIR}/vorbereitung als Textdatei gespeichert, jede Änderung als neue Version.</p>
@@ -2040,25 +2287,47 @@ function prepHTML(){
           <p>Für die Sektoren nach NISV: ${NUTZER_NISV}</p></div>
         <div class="wide" id="thrprev">${thrPreview(pdraft)}</div>
       </fieldset>
+      <fieldset class="sec" id="personen"><legend>Personen</legend>
+        <p class="hint">Jede Person hier einmal erfassen. Die Stellen in den folgenden Abschnitten verweisen auf diese Liste, eine Änderung gilt überall. Alle Angaben sind freiwillig. Je Stelle lassen sich eine Person und zwei Vertretungen wählen.</p>
+        ${profileOld && profile && pdraft.personen?.length ? `<p class="gap">Diese Vorbereitung stammt aus einer früheren Version des Werkzeugs. Die Personen wurden aus den einzelnen Stellen übernommen, E-Mail-Adressen und übrige Kontaktangaben getrennt. Bitte prüfen und speichern.</p>` : ""}
+        ${personsHTML()}
+      </fieldset>
       <fieldset class="sec"><legend>Ansprechpersonen für Meldungen</legend>
-        <p class="sub">Hauptansprechperson gegenüber dem CSIRT</p>
-        <div class="grid">${inp("haupt.name","Name")}${inp("haupt.funktion","Funktion")}${inp("haupt.kontakt","E-Mail und Telefon")}</div>
-        <p class="sub">Standardbesetzung im Vorfall</p>
-        <div class="grid">${inp("rollen.im","Incident Manager")}${inp("rollen.doku","Dokumentationsverantwortliche/r")}</div>
+        ${ROLES.map(([k,l])=>`<p class="sub">${k==="haupt" ? "Hauptansprechperson gegenüber dem CSIRT" : l+" (Standardbesetzung im Vorfall)"}</p><div class="grid">${slotHTML("stellen."+k, l)}</div>`).join("")}
         <p class="sub">Weitere Ansprechpersonen</p>
-        ${listRows("weitere", [["name","Name"],["funktion","Funktion"],["kontakt","E-Mail und Telefon"]], "Ansprechperson hinzufügen")}
+        <p class="hint">Stehen im Meldeformular unter „Weitere Ansprechpersonen“, nach den Vertretungen der Hauptansprechperson.</p>
+        ${rowsHTML("ansprech", b=>personSel(b+".p", "Person", "Weitere Ansprechperson"), "Ansprechperson hinzufügen")}
       </fieldset>
       <fieldset class="sec"><legend>Zugang zum Meldeportal (USP)</legend>
-        <p class="hint">Wer kann im Unternehmensserviceportal Meldungen für die Einrichtung abgeben? Empfehlung: mindestens zwei Personen, damit die 24-Stunden-Frist auch bei Abwesenheit hält.</p>
+        <p class="hint">Wer kann im Unternehmensserviceportal Meldungen für die Einrichtung abgeben? Empfehlung: mindestens zwei Personen, etwa eine Person und eine Vertretung, damit die 24-Stunden-Frist auch bei Abwesenheit hält.</p>
         <div class="grid">${inp("krypto","Verschlüsselte E-Mail mit den CSIRTs (Rückfallebene)",{options:[["","Noch nicht eingerichtet"],["ja","Schlüssel bzw. Zertifikate importiert und getestet"]]})}</div>
-        ${listRows("usp", [["name","Name"],["funktion","Funktion"],["kontakt","E-Mail und Telefon"],["rolle","Rolle",{options:[["Hauptzugang","Hauptzugang"],["Vertretung","Vertretung"]]}]], "Person hinzufügen")}
+        ${rowsHTML("meldeportal", b=>slotHTML(b, "Zugang zum Meldeportal"), "Weiteren Zugang hinzufügen")}
       </fieldset>
       <fieldset class="sec"><legend>Vor einer Meldung informieren oder freigeben</legend>
         <p class="hint">Wer muss vor der Frühwarnung oder Meldung zustimmen, und wer wird nur informiert? Etwa Geschäftsführung, CISO, Rechtsabteilung.</p>
-        ${listRows("approvals", [["name","Name"],["funktion","Funktion"],["kontakt","E-Mail und Telefon"],["aktion","Aufgabe",{options:[["freigeben","Gibt frei"],["informieren","Wird informiert"]]}],["zeitpunkt","Zeitpunkt",{options:[["vor-fw","Vor der Frühwarnung"],["vor-meld","Vor der Meldung"],["nach","Nach der Meldung"]]}],["vertretung","Vertretung"]], "Person hinzufügen")}
+        ${rowsHTML("freigaben", b=>`${slotHTML(b, "Information oder Freigabe")}${inp(b+".aktion","Aufgabe",{options:[["freigeben","Gibt frei"],["informieren","Wird informiert"]]})}${inp(b+".zeitpunkt","Zeitpunkt",{options:Object.entries(WHEN)})}`, "Eintrag hinzufügen")}
+      </fieldset>
+      <fieldset class="sec" id="empfaenger"><legend>Empfänger der Dienste</legend>
+        <p class="hint">Beeinträchtigt ein erheblicher Cybersicherheitsvorfall die Erbringung eines Dienstes, unterrichtet die Einrichtung die Empfänger dieses Dienstes unverzüglich und teilt, soweit möglich, Maßnahmen mit, die sie selbst ergreifen können (§ 34 Abs. 3 NISG 2026). Die Meldung fragt ab, ob das geschehen ist (Formular Meldung, Seite 7). Wer die Empfänger nicht unverzüglich unterrichtet, begeht eine Verwaltungsübertretung (§ 45 Abs. 1 Z 5 NISG 2026).</p>
+        ${lawBox(["nisg-34-3"])}
+        ${inp("empfMethodik","Vorgehen: Empfänger ermitteln und unterrichten",{type:"textarea",rows:5,cls:"wide",ph:"z. B. Betroffene Dienste aus dem Vorfall ableiten. Kunden je Dienst im CRM filtern (Bericht „Verträge je Dienst“). Text aus der Vorlage im Notfallhandbuch anpassen und freigeben lassen. Versand über E-Mail-Verteiler, Hinweis auf der Statusseite. Versand im Aktionsprotokoll festhalten."})}
+        <p class="sub">Empfänger und Gruppen</p>
+        <p class="hint">Einzelne Empfänger, etwa Geschäftskunden mit eigenem Kontakt, oder Gruppen wie die Privatkunden eines Dienstes. Kontaktpersonen beim Empfänger und wer intern unterrichtet, kommen aus der Liste der Personen.</p>
+        ${rowsHTML("empfaenger", b=>`${inp(b+".bez","Empfänger oder Gruppe",{cls:"wide",ph:"z. B. Geschäftskunden Strom, Landesklinikum Musterstadt"})}
+          <div class="grid c3">${inp(b+".art","Art",{options:[["","bitte wählen"],...Object.entries(EMPF_ART)]})}${inp(b+".anzahl","Anzahl (ca.)",{ph:"z. B. 1.200"})}${inp(b+".prio","Reihenfolge",{options:[["","offen"],...Object.entries(EMPF_PRIO)]})}</div>
+          <div class="grid c2">${inp(b+".dienst","Betroffener Dienst",{type:"textarea",rows:3,ph:"z. B. Stromversorgung, Kundenportal"})}${inp(b+".daten","Betroffene Daten oder Datenarten",{type:"textarea",rows:3,ph:"z. B. Kontakt-, Vertrags-, Verbrauchs- oder Zahlungsdaten"})}</div>
+          <div class="grid c2">${inp(b+".kanal","Kommunikationsweg",{type:"textarea",rows:3,ph:"z. B. E-Mail-Verteiler, SMS, Statusseite"})}${inp(b+".quelle","Kontaktdaten zu finden in",{type:"textarea",rows:3,ph:"z. B. CRM, Bericht „Verträge je Dienst“, Abrechnungssystem"})}</div>
+          <p class="sub">Beim Empfänger</p>
+          <div class="grid c3">${personSel(b+".kontakt","Kontakt beim Empfänger","Empfänger")}</div>
+          <p class="sub">Intern zuständig</p>
+          <div class="grid c3">${personSel(b+".p","Unterrichtet durch","Empfänger")}${personSel(b+".v1","1. Vertretung","Empfänger, unterrichtet durch")}${personSel(b+".v2","2. Vertretung","Empfänger, unterrichtet durch")}</div>
+          ${inp(b+".hinweis","Hinweis",{type:"textarea",rows:3,cls:"wide",ph:"z. B. vertragliche Informationspflicht, Textvorlage, Erreichbarkeit"})}`, "Empfänger hinzufügen", "block")}
       </fieldset>
       <fieldset class="sec"><legend>Weitere Stellen</legend>
-        <div class="rows">${extF.map(([k,l])=>`<div class="row two"><p class="sub">${l}</p>${inp(`extern.${k}.name`,"Name oder Firma")}${inp(`extern.${k}.kontakt`,"Kontakt")}</div>`).join("")}</div>
+        <div class="rows">${EXTERN.map(([k,l])=>`<div class="row"><p class="sub">${l}</p>${slotHTML("stellen."+k, l)}${inp(`stellen.${k}.hinweis`,"Hinweis",{ph:k==="versicherung"?"z. B. Polizzennummer, Meldefrist laut Polizze":""})}</div>`).join("")}</div>
+        <p class="sub">Eigene Stellen</p>
+        <p class="hint">Weitere Stellen mit eigener Bezeichnung, etwa Hosting-Dienstleister, IT-Lieferant oder Betriebsrat.</p>
+        ${rowsHTML("stellenWeitere", b=>`${inp(b+".bez","Bezeichnung der Stelle",{cls:"wide"})}${slotHTML(b, "Eigene Stelle")}${inp(b+".hinweis","Hinweis")}`, "Stelle hinzufügen")}
       </fieldset>
       <fieldset class="sec"><legend>Anmerkungen</legend>
         ${inp("notizen","Hinweise für den Ernstfall",{type:"textarea",rows:3,ph:"z. B. Ablageort der Notfallhandbücher, Bereitschaftsnummern",cls:"wide"})}
@@ -2091,6 +2360,26 @@ function incListHTML(){
     ${list.length?`<p class="note">Vorfälle werden im Werkzeug bewusst nicht gelöscht. Wer einen Vorfall entfernen muss, löscht dessen Ordner im Dateisystem.</p>`:""}
   </section>`;
 }
+/* Standardbesetzung aus der Vorbereitung; die Vertretungen stehen darunter, falls die Person nicht erreichbar ist */
+const pShort = x => [pLabel(x), x.tel||x.email].filter(Boolean).join(", ");
+/* Vorschläge für Personenfelder im Vorfall aus der gespeicherten Vorbereitung; bei einer Rolle zuerst deren Person und Vertretungen.
+   Freitext bleibt möglich; gespeichert wird der Text, kein Verweis auf die Person. */
+function personList(id, role){
+  const s = role ? profile?.stellen?.[role] : null, first = role ? slotPeople(profile, s) : [];
+  const list = [...first, ...(profile?.personen||[]).filter(x=>!first.includes(x))].filter(x=>x.name || x.org);
+  const seen = new Set(), opts = [];
+  list.forEach(x=>{ const v = role ? pShort(x) : pLabel(x); if(seen.has(v)) return; seen.add(v);
+    const slot = role ? SLOT.find(([k])=>s?.[k]===x.id) : null;
+    opts.push(`<option value="${esc(v)}" label="${esc([slot && (slot[0]==="p" ? ROLES.find(r=>r[0]===role)[1] : slot[1]), x.funktion, x.name ? x.org : ""].filter(Boolean).join(", "))}"></option>`); });
+  return opts.length ? `<datalist id="${id}">${opts.join("")}</datalist>` : "";
+}
+const PERSON_LISTS = () => personList("dl-im", "im") + personList("dl-doku", "doku") + personList("dl-name");
+function roleInput(id, k, label){
+  const s = profile?.stellen?.[k];
+  const dep = SLOT.slice(1).map(([kk,l])=>{ const x = pers(profile, s?.[kk]); return x ? `${l}: ${esc(pShort(x))}` : ""; }).filter(Boolean).join(" · ");
+  const x = pers(profile, s?.p);
+  return `<label class="fld" for="${id}">${label}<input id="${id}" type="text" list="dl-${k}" value="${esc(x?pShort(x):"")}" placeholder="Name, Erreichbarkeit" autocomplete="off">${dep?`<span class="ref">${dep}</span>`:""}</label>`;
+}
 function incNewHTML(){
   return `<section class="incnew">
     <h2>Neuen Vorfall erfassen</h2>
@@ -2104,10 +2393,11 @@ function incNewHTML(){
       </div>
       <p class="hint">Zwei Zeitpunkte: Wann wurde der Vorfall erkannt oder gemeldet, und wann stand nach der Erstbewertung mit hinreichender Gewissheit fest, dass er erheblich ist? Ab dem zweiten laufen die Meldefristen (ErwGr 31 DVO). Beide lassen sich später ändern.</p>
       <div class="grid">
-        <label class="fld" for="ni-im">Incident Manager<input id="ni-im" type="text" value="${esc(profile?.rollen?.im||"")}" placeholder="Name, Erreichbarkeit" autocomplete="off"></label>
-        <label class="fld" for="ni-doku">Dokumentationsverantwortliche/r<input id="ni-doku" type="text" value="${esc(profile?.rollen?.doku||"")}" placeholder="Name, Erreichbarkeit" autocomplete="off"></label>
+        ${roleInput("ni-im", "im", "Incident Manager")}
+        ${roleInput("ni-doku", "doku", "Dokumentationsverantwortliche/r")}
       </div>
       <label class="opt ueb"><input type="checkbox" id="ni-uebung"><span><strong>Übungsvorfall</strong>, etwa für ein Planspiel. Wird überall als Übung gekennzeichnet und im Ordner mit „UEBUNG_“ abgelegt.</span></label>
+      ${PERSON_LISTS()}
       <div class="savebar"><button type="submit" class="btn" ${!storeReady?"disabled":""}>Anlegen und Checkliste starten</button><button type="button" class="link" data-go="incidents">Abbrechen</button><span class="ref" id="nistatus" role="status"></span></div>
     </form>
   </section>`;
@@ -2116,22 +2406,23 @@ function incHeadHTML(){
   return `<section class="inchead">
     ${inc.uebung?`<p class="uebbar">${UEB} Übungsvorfall. Meldetexte, Protokolle und Kalendereinträge sind als Übung gekennzeichnet. Nichts davon an ein CSIRT übermitteln.</p>`:""}
     <div id="lockslot">${lockHTML()}</div>
-    <div class="ihead"><button type="button" class="link" data-go="incidents">← Alle Vorfälle</button><span class="ref">Version ${incMeta?.latestVersion||"–"} gespeichert${incMeta?.updatedAt?" am "+fmt(new Date(incMeta.updatedAt)):""} · <span class="sel">${DATA_DIR}/vorfaelle/${esc(incId)}</span></span></div>
+    <div class="ihead"><span class="iheadl"><button type="button" class="link" data-go="incidents">← Alle Vorfälle</button><button type="button" class="link" id="doc-print-head">Vorfallbericht drucken oder als PDF speichern</button></span><span class="ref">Version ${incMeta?.latestVersion||"–"} gespeichert${incMeta?.updatedAt?" am "+fmt(new Date(incMeta.updatedAt)):""} · <span class="sel">${DATA_DIR}/vorfaelle/${esc(incId)}</span></span></div>
     <label class="fld wide" for="inc-title">Bezeichnung<input id="inc-title" data-inc="title" type="text" value="${esc(inc.title)}" autocomplete="off"></label>
     <label class="fld wide" for="inc-desc">Sachverhalt <span class="ref">wird als Beschreibung in die Meldetexte übernommen</span><textarea id="inc-desc" data-inc="desc" rows="5">${esc(inc.desc)}</textarea></label>
-    <div class="grid">
+    <div class="grid c1">
       <label class="fld" for="inc-te">Vorfall erstmals erkannt<input id="inc-te" type="datetime-local" value="${toLocalInput(TE)}"></label>
       <label class="fld" for="inc-tf">Erheblichkeit festgestellt <span class="ref">Fristbeginn</span><input id="inc-tf" type="datetime-local" value="${TF?toLocalInput(TF):""}"></label>
       <label class="fld" for="inc-status">Status<select id="inc-status" data-inc="status">${Object.entries(STATUS).map(([k,l])=>`<option value="${k}" ${inc.status===k?"selected":""}>${l}</option>`).join("")}</select></label>
     </div>
     <p class="sub">Verantwortlichkeiten und Dokumentation</p>
-    <div class="grid">
-      <label class="fld" for="doc-im">Incident Manager<input id="doc-im" data-docu="im" type="text" value="${esc(docu.im||"")}" placeholder="Name, Erreichbarkeit" autocomplete="off"></label>
-      <label class="fld" for="doc-doku">Dokumentationsverantwortliche/r<input id="doc-doku" data-docu="doku" type="text" value="${esc(docu.doku||"")}" placeholder="Name, Erreichbarkeit" autocomplete="off"></label>
-      <label class="fld" for="doc-ref">Interne Referenz<input id="doc-ref" data-docu="ref" type="text" value="${esc(docu.ref||"")}" placeholder="z. B. Ticketnummer" autocomplete="off"></label>
-      <label class="fld" for="doc-beteiligte">Weitere Beteiligte<input id="doc-beteiligte" data-docu="beteiligte" type="text" value="${esc(docu.beteiligte||"")}" placeholder="z. B. IR-Dienstleister, Rechtsabteilung" autocomplete="off"></label>
+    <div class="grid c2">
+      <label class="fld" for="doc-im">Incident Manager<input id="doc-im" data-docu="im" type="text" list="dl-im" value="${esc(docu.im||"")}" placeholder="Name, Erreichbarkeit" autocomplete="off"></label>
+      <label class="fld" for="doc-doku">Dokumentationsverantwortliche/r<input id="doc-doku" data-docu="doku" type="text" list="dl-doku" value="${esc(docu.doku||"")}" placeholder="Name, Erreichbarkeit" autocomplete="off"></label>
     </div>
+    <div class="grid c1"><label class="fld" for="doc-ref">Interne Referenz<input id="doc-ref" data-docu="ref" type="text" value="${esc(docu.ref||"")}" placeholder="z. B. Ticketnummer" autocomplete="off"></label></div>
+    <label class="fld wide" for="doc-beteiligte">Weitere Beteiligte<textarea id="doc-beteiligte" data-docu="beteiligte" rows="3" placeholder="z. B. IR-Dienstleister mit Ansprechperson, Rechtsabteilung, Kommunikation, Versicherung">${esc(docu.beteiligte||"")}</textarea></label>
     <label class="fld wide" for="doc-weitere">Weitere Dokumentation<textarea id="doc-weitere" data-docu="weitere" rows="3" placeholder="Ablageort von Beweisen und Logs, Ticket-Links, Absprachen …">${esc(docu.weitere||"")}</textarea></label>
+    ${PERSON_LISTS()}
     ${profileSummary()}
     ${historyHTML()}
   </section>
@@ -2144,21 +2435,43 @@ function actLogHTML(){
   return `<div class="ahead"><h3>Aktionen</h3><span class="ref">${list.length} Eintr${list.length===1?"ag":"äge"}, zeitlich sortiert</span></div>
     <form id="actform" class="actform">
       <label class="fld" for="act-ts">Zeitpunkt<input id="act-ts" type="datetime-local" value="${toLocalInput(nowMin())}" required></label>
-      <label class="fld" for="act-typ">Art der Aktion<select id="act-typ">${ACTTYPES.map(t=>`<option>${t}</option>`).join("")}</select></label>
-      <label class="fld" for="act-wer">Durch<input id="act-wer" type="text" value="${esc(userName||docu.doku||"")}" placeholder="Person oder Rolle" autocomplete="off"></label>
+      <label class="fld" for="act-typ">Art der Aktion<select id="act-typ">${actTypOpts("")}</select></label>
+      <label class="fld" for="act-wer">Durch<input id="act-wer" type="text" list="dl-name" value="${esc(userName||docu.doku||"")}" placeholder="Person oder Rolle" autocomplete="off"></label>
       <label class="fld wide" for="act-text">Beschreibung<textarea id="act-text" rows="2" placeholder="Was ist passiert, was wurde entschieden oder veranlasst?"></textarea></label>
       <div class="actbtns"><button type="submit" class="btn">Aktion erfassen</button><span class="ref" id="actstatus" role="status"></span></div>
     </form>
-    ${list.length ? `<ol class="actlist">${list.map(a=>`<li>
-      <time datetime="${esc(a.ts)}">${a.ts?fmt(new Date(a.ts)):"–"}</time>
-      <span class="badge ${a.typ==="Entscheidung"?"rel":"inf"}">${esc(a.typ)}</span>
-      <span class="atext">${nl2br(a.text)}</span>
-      ${a.wer?`<span class="ref">durch ${esc(a.wer)}</span>`:""}
-      <button type="button" class="link" data-delact="${esc(a.id)}">Entfernen</button>
-    </li>`).join("")}</ol>` : `<p class="empty">Noch keine Aktionen erfasst.</p>`}
-    <p class="note">Aktionen werden mit dem Vorfall gespeichert. Entfernte Einträge bleiben in früheren Versionen erhalten.</p>`;
+    ${list.length ? `<ol class="actlist">${list.map(actItemHTML).join("")}</ol>` : `<p class="empty">Noch keine Aktionen erfasst.</p>`}
+    <p class="note">Aktionen werden mit dem Vorfall gespeichert. Geänderte und entfernte Einträge bleiben in früheren Versionen erhalten.</p>`;
 }
-function renderActs(){ const b=$("actbox"); if(b){ b.innerHTML = actLogHTML(); actTsEdited=false; } }
+const actTypOpts = cur => [...ACTTYPES, ...(cur && !ACTTYPES.includes(cur) ? [cur] : [])].map(t=>`<option${t===cur?" selected":""}>${esc(t)}</option>`).join("");
+function actItemHTML(a){
+  if(a.id===actEdit) return `<li class="${actCls(a.typ)} editing"><form id="acteditform" class="actform" data-act="${esc(a.id)}">
+      <label class="fld" for="ae-ts">Zeitpunkt<input id="ae-ts" type="datetime-local" value="${a.ts?toLocalInput(new Date(a.ts)):""}" required></label>
+      <label class="fld" for="ae-typ">Art der Aktion<select id="ae-typ">${actTypOpts(a.typ)}</select></label>
+      <label class="fld" for="ae-wer">Durch<input id="ae-wer" type="text" list="dl-name" value="${esc(a.wer||"")}" placeholder="Person oder Rolle" autocomplete="off"></label>
+      <label class="fld wide" for="ae-text">Beschreibung<textarea id="ae-text" rows="3">${esc(a.text||"")}</textarea></label>
+      <div class="actbtns"><button type="submit" class="btn">Änderung übernehmen</button><button type="button" class="link" data-actcancel="1">Abbrechen</button><span class="ref" id="aestatus" role="status"></span></div>
+    </form></li>`;
+  const meta = [a.wer && `durch ${esc(a.wer)}`, a.geaendert && `geändert am ${fmt(new Date(a.geaendert))}`].filter(Boolean);
+  return `<li class="${actCls(a.typ)}">
+      <time datetime="${esc(a.ts)}">${a.ts?fmt(new Date(a.ts)):"–"}</time>
+      <span class="badge at">${esc(a.typ)}</span>
+      <span class="atext">${nl2br(a.text)}</span>
+      ${meta.length?`<span class="ref">${meta.join(" · ")}</span>`:""}
+      <span class="abtns"><button type="button" class="link" data-editact="${esc(a.id)}">Bearbeiten</button><button type="button" class="link" data-delact="${esc(a.id)}">Entfernen</button></span>
+    </li>`;
+}
+/* Neu aufbauen; Eingaben im Erfassungsformular und im offenen Bearbeitungsformular bleiben erhalten */
+function renderActs(clearNew=false){
+  const b=$("actbox"); if(!b) return;
+  const keepTs = !clearNew && actTsEdited;
+  const ids = [...(clearNew ? [] : ["act-typ","act-wer","act-text", ...(keepTs?["act-ts"]:[])]), ...(actEdit && $("acteditform")?.dataset.act===actEdit ? ["ae-ts","ae-typ","ae-wer","ae-text"] : [])];
+  const vals = ids.map(id=>[id, $(id)?.value]);
+  b.innerHTML = actLogHTML();
+  vals.forEach(([id,v])=>{ const e=$(id); if(e && v!=null) e.value = v; });
+  actTsEdited = keepTs;
+  plRestore();
+}
 setInterval(()=>{ const t=$("act-ts"); if(t && !actTsEdited && document.activeElement!==t) t.value = toLocalInput(nowMin()); }, 20000);
 
 function render(){
@@ -2177,9 +2490,11 @@ function render(){
   app.innerHTML = h;
   renderCheck();
   renderSavebar();
+  plRestore();
   $("treebox").hidden = !(view==="check" || view==="incident");
 }
 function goView(v){
+  plReset();
   if(view==="incident" && v!=="incident") releaseLock();
   if(v==="check" && view!=="check"){ inc=null; incId=null; resetCheck(true); }
   if(v==="prep"){ pdraft=null; pdirty=false; pstatus=""; }
@@ -2229,12 +2544,13 @@ const metaOf = (st, n, now, created) => ({title:st.title, status:st.status, uebu
    damit die berechneten Fristen erhalten bleiben. Die Vorab-Frage q0 entfällt. */
 function loadState(d){
   inc = {title:d.title||"", desc:d.desc||"", status:d.status||"offen", uebung:!!d.uebung};
-  docu = {...(d.docu||{})}; rep = clone(d.rep); mgmt = {...(d.mgmt||{})}; actions = (d.actions||[]).map(a=>({...a}));
+  docu = {...(d.docu||{})}; rep = clone(d.rep); mgmt = {...(d.mgmt||{})}; actions = (d.actions||[]).map(a=>({...a})); actEdit = null;
   sel = new Set((d.sel||[]).filter(k=>T[k])); selUnclear = !!d.selUnclear;
   path = (d.path||[]).filter(p=>p.id && p.id!=="q0" && (Q[p.id] || p.id.startsWith("t:"))).map(p=>({...p}));
   cur = d.cur||"qs";
   const valid = R[cur] || (Q[cur] && cur!=="q0") || cur.startsWith("t:");
   if(!valid){ cur = "qs"; path = []; }
+  prevAns = {};
   qnotes = {...(d.qnotes||{})}; delete qnotes.q0;
   gnote = d.gnote||""; stepsDone = {...(d.stepsDone||{})};
   TE = d.te ? new Date(d.te) : d.t0 ? new Date(d.t0) : nowMin();
@@ -2253,8 +2569,9 @@ const lockedOut = () => !!lockState && !lockState.own;
 function savebarHTML(){
   const latest = incMeta?.latestVersion || 0;
   const loaded = viewVersion && viewVersion!==latest ? `Version ${viewVersion} geladen. Speichern legt sie als Version ${latest+1} an.` : "";
+  const pbm = saveBlockMsg ? plBlock(id=>!id.startsWith("pf-")) : "";
   const state = lockedOut() ? `Speichern gesperrt: Der Vorfall wird gerade von ${lockState.user||"jemand anderem"} bearbeitet.`
-    : dirty ? (latest ? "Ungespeicherte Änderungen" : "Älterer Eintrag ohne Versionen: Speichern legt Version 1 an") : (saveMsg || `Gespeichert als Version ${latest}`);
+    : pbm || (dirty ? (latest ? "Ungespeicherte Änderungen" : "Älterer Eintrag ohne Versionen: Speichern legt Version 1 an") : (saveMsg || `Gespeichert als Version ${latest}`));
   if(pendingNav) return `<div class="savebar sticky guard" role="alert"><span><strong>Ungespeicherte Änderungen.</strong> Vorher speichern?</span>
     <button type="button" class="btn" id="save-go" ${lockedOut()?"disabled":""}>Speichern und weiter</button><button type="button" class="link danger" id="discard-go">Verwerfen</button><button type="button" class="link" id="cancel-go">Abbrechen</button></div>`;
   return `<div class="savebar sticky${dirty?" isdirty":""}">
@@ -2284,7 +2601,7 @@ async function fetchVersions(id){
 const readVersion = (id, n) => readVersionFile(id, n);
 async function openIncident(id){
   const m = incidents.find(x=>x.id===id); if(!m) return;
-  incId=id; incMeta={...m}; lockState=null; rtype=null;
+  incId=id; incMeta={...m}; lockState=null; rtype=null; plReset();
   const d = m.latestVersion ? await readVersion(id, m.latestVersion).catch(()=>null) : null;
   if(d) loadState(d);
   else {
@@ -2304,12 +2621,14 @@ async function openIncident(id){
 async function loadVersionIntoEditor(n){
   const d = await readVersion(incId, n).catch(()=>null);
   if(!d){ saveMsg="Version konnte nicht gelesen werden."; renderSavebar(); return; }
-  loadState(d); viewVersion = n;
+  loadState(d); viewVersion = n; plReset();
   render(); markDirty();
 }
 async function saveIncident(){
   if(!storeReady || !incId || saving) return false;
   if(lockedOut()){ renderSavebar(); return false; }
+  const pb = plBlock(id=>!id.startsWith("pf-"));
+  if(pb){ saveBlockMsg = pb; renderSavebar(); plFirst(id=>!id.startsWith("pf-")); return false; }
   if(!dirty){ saveMsg="Keine Änderungen, daher keine neue Version."; renderSavebar(); return true; }
   const note = ($("vnote")?.value||"").trim();
   saving=true; renderSavebar();
@@ -2362,7 +2681,7 @@ function protocolText(n, d){
     `Status: ${STATUS[inc.status]||"In Bearbeitung"}`,
     `Vorfall erkannt: ${fmt(TE)}`, `Erheblichkeit festgestellt: ${TF?fmt(TF):"–"}`, `Meldung übermittelt: ${TM?fmt(TM):"–"}`,
     ``, `Sachverhalt:`, inc.desc||"–", ``);
-  lines.push(`Incident Manager: ${docu.im||"–"}`, `Dokumentationsverantwortliche/r: ${docu.doku||"–"}`, `Interne Referenz: ${docu.ref||"–"}`, `Weitere Beteiligte: ${docu.beteiligte||"–"}`, ``);
+  lines.push(`Incident Manager: ${docu.im||"–"}`, `Dokumentationsverantwortliche/r: ${docu.doku||"–"}`, `Interne Referenz: ${docu.ref||"–"}`, `Weitere Beteiligte: ${(docu.beteiligte||"–").replace(/\n/g,"\n  ")}`, ``);
   lines.push(`Ergebnis: ${cur.startsWith("r_")?RESULTSHORT[cur]:"Prüfung nicht abgeschlossen"}`);
   const hits = path.filter(p=>isCrit(p.id) && p.ans==="Ja");
   if(hits.length) lines.push(`Erfüllte Kriterien: ${hits.map(p=>val(node(p.id).short)).join("; ")}`);
@@ -2448,10 +2767,11 @@ function reportEntries(type){
   add("Name der Einrichtung", pr.name, true, false);
   add("Identifikationskennziffer", pr.kennziffer, true, false);
   add("Bezeichnung des Cybersicherheitsvorfalls", inc?.title, true, false);
-  add("Hauptansprechperson: Name", pr.haupt?.name, true, false);
-  add("Hauptansprechperson: E-Mail-Adresse und/oder Telefonnummer", pr.haupt?.kontakt, true, false);
-  add("Hauptansprechperson: Funktion/Anmerkung", pr.haupt?.funktion, false, false);
-  add("Weitere Ansprechpersonen", filled(pr.weitere).map(p=>[p.name,p.funktion,p.kontakt].filter(Boolean).join(", ")).join("; "), false, false);
+  const h = pers(pr, pr.stellen?.haupt?.p) || {};
+  add("Hauptansprechperson: Name", h.name, true, false);
+  add("Hauptansprechperson: E-Mail-Adresse und/oder Telefonnummer", pKontakt(h), true, false);
+  add("Hauptansprechperson: Funktion/Anmerkung", [h.funktion, h.org].filter(Boolean).join(", "), false, false);
+  add("Weitere Ansprechpersonen", weitereAnsprech(pr), false, false);
   if(type==="wr"){
     S("Widerruf");
     add("Gründe, aus denen kein erheblicher Cybersicherheitsvorfall vorliegt", rep.wrGrund);
@@ -2566,13 +2886,13 @@ function rField(k, label, o={}){
   const id = "rep-"+k, req = o.req===false ? "" : REQ;
   if(o.dt) return `<label class="fld" for="${id}">${label}${req}<input id="${id}" type="datetime-local" data-rep="${k}" data-dt="1" value="${rep[k]?toLocalInput(new Date(rep[k])):""}"></label>`;
   if(o.area) return `<label class="fld wide" for="${id}">${label}${req}<textarea id="${id}" data-rep="${k}" rows="${o.rows||3}" placeholder="${esc(o.ph||"")}">${esc(rep[k]||"")}</textarea></label>`;
-  return `<label class="fld${o.wide?" wide":""}" for="${id}">${label}${req}<input id="${id}" type="text" data-rep="${k}" value="${esc(rep[k]||"")}" placeholder="${esc(o.ph||"")}" autocomplete="off"></label>`;
+  return `<label class="fld${o.wide?" wide":""}" for="${id}">${label}${req}<input id="${id}" type="text" data-rep="${k}"${o.list?` list="${o.list}"`:""} value="${esc(rep[k]||"")}" placeholder="${esc(o.ph||"")}" autocomplete="off"></label>`;
 }
 function repFormHTML(){
   const u = arr("ursachen"), sug = suggestKrit();
   return `
   <fieldset class="sec"><legend>Meldende Person und Zeitpunkte</legend>
-    <div class="grid">${rField("melder","Name der meldenden Person",{ph:userName||"Vor- und Nachname"})}${rField("beginn","Beginn des Vorfalls",{dt:true})}${rField("portalId","Incident-ID im Meldeportal",{req:false, ph:"nach der Frühwarnung"})}</div>
+    <div class="grid">${rField("melder","Name der meldenden Person",{ph:userName||"Vor- und Nachname", list:"dl-name"})}${rField("beginn","Beginn des Vorfalls",{dt:true})}${rField("portalId","Incident-ID im Meldeportal",{req:false, ph:"nach der Frühwarnung"})}</div>
     <p class="ref">Erstmals erkannt: ${fmt(TE)}, aus dem Vorfall oben.${rep.melder?"":userName?` Ohne Eintrag wird ${esc(userName)} als meldende Person verwendet.`:""}</p>
     ${sel.has("trust")?rOpts("trustHit","Ist der Vertrauensdienst vom Vorfall betroffen?",YN):""}
     ${rOpts("rechtswidrig","Ist der Vorfall auf rechtswidrige und schuldhafte Handlungen zurückzuführen?",YNU)}
@@ -2641,8 +2961,8 @@ function repHTML(){
 }
 /* Neu zeichnen, ohne den Fokus zu verlieren */
 function keepFocus(fn){ const a=document.activeElement?.id; fn(); if(a){ const e=$(a); if(e && e!==document.activeElement) e.focus({preventScroll:true}); } }
-function renderRepForm(){ const f=$("repform"); if(f) keepFocus(()=>{ f.innerHTML = repFormHTML(); }); }
-function renderRep(){ const b=$("repbox"); if(b) keepFocus(()=>{ b.innerHTML = repHTML(); }); }
+function renderRepForm(){ const f=$("repform"); if(f) keepFocus(()=>{ f.innerHTML = repFormHTML(); }); plRestore(); }
+function renderRep(){ const b=$("repbox"); if(b) keepFocus(()=>{ b.innerHTML = repHTML(); }); plRestore(); }
 function refreshRtext(){ const b=$("rtext"); if(b) b.innerHTML = rtextHTML(); }
 
 /* =====================================================================
@@ -2686,16 +3006,17 @@ function execModel(){
 
   /* Entscheidungsbedarf, aus dem Stand abgeleitet */
   const pr = profile||{}, need = [];
-  const approvers = k => filled(pr.approvals).filter(a=>a.aktion==="freigeben" && (a.zeitpunkt||"vor-fw")===k).map(a=>[a.name,a.funktion].filter(Boolean).join(", "));
+  const approvers = k => (pr.freigaben||[]).filter(a=>a.aktion==="freigeben" && (a.zeitpunkt||"vor-fw")===k && pers(pr, a.p)).map(a=>{ const d = [a.v1, a.v2].map(id=>pers(pr, id)).filter(Boolean).map(pLabel); return pDesc(pers(pr, a.p)).slice(0,2).join(", ") + (d.length ? ` (Vertretung: ${d.join(", ")})` : ""); });
   if(mode && !stepsDone.fw && !stepsDone.meld){ const a = approvers("vor-fw"); need.push(`${res==="r_report"?"Frühwarnung":"Empfohlene Frühwarnung"} freigeben${a.length?" (Freigabe: "+a.join("; ")+")":""}. Interne Freigaben verlängern die Frist nicht.`); }
   if(res==="r_report" && !stepsDone.meld){ const a = approvers("vor-meld"); need.push(`Meldung freigeben${a.length?" (Freigabe: "+a.join("; ")+")":""}.`); }
   if(open.length && mode) need.push(`Offene Punkte klären lassen: ${open.join("; ")}.`);
-  if(res==="r_report" && rep.empf!=="Ja") need.push("Empfänger der Dienste informieren, soweit die Erbringung des Dienstes beeinträchtigt ist (§ 34 Abs. 3 NISG 2026).");
+  if(res==="r_report" && rep.empf!=="Ja") need.push("Empfänger der Dienste informieren, soweit die Erbringung des Dienstes beeinträchtigt ist (§ 34 Abs. 3 NISG 2026)." + (empfFirst(pr).length ? ` Laut Vorbereitung zuerst: ${empfFirst(pr).join(", ")}.` : ""));
   if(rep.oeff==="Ja") need.push("Externe Kommunikation abstimmen: Der Vorfall ist bereits öffentlich bekannt.");
   if(rep.rechtswidrig==="Ja") need.push("Strafanzeige prüfen; das CSIRT gibt dazu Orientierungshilfe (§ 34 Abs. 4 NISG 2026).");
   if(rep.nurAT==="Nein") need.push("Meldepflichten in den anderen betroffenen Staaten prüfen lassen. Die Meldung in Österreich erfüllt sie laut Bundesamt nicht automatisch.");
   if(mode && !stepsDone.dsgvo) need.push("Klären, ob personenbezogene Daten betroffen sind. Dann gilt zusätzlich die 72-Stunden-Frist nach Art. 33 DSGVO.");
-  if((pr.extern?.versicherung?.name || pr.extern?.versicherung?.kontakt) && mode) need.push(`Cyberversicherung informieren (${[pr.extern.versicherung.name, pr.extern.versicherung.kontakt].filter(Boolean).join(", ")}); Meldefristen der Polizze beachten.`);
+  const vs = pr.stellen?.versicherung, vx = slotPeople(pr, vs)[0];
+  if((vx || vs?.hinweis) && mode) need.push(`Cyberversicherung informieren (${[pLabel(vx), pKontakt(vx), vs.hinweis].filter(Boolean).join(", ")}); Meldefristen der Polizze beachten.`);
   if(res==="r_report" && rep.andauernd==="Nein" && !stepsDone.ab) need.push("Abschlussbericht freigeben. Er kann nur einmal übermittelt werden und schließt den Vorfall im Meldeportal endgültig ab.");
 
   const facts = [
@@ -2707,7 +3028,7 @@ function execModel(){
     ["Betroffene Sektoren", [...new Set([...sel].map(id=>T[id].sector))].join(", ") || "–"],
     ["Zuständige Meldestelle", res==="r_dora" ? "DORA-Meldewesen" : csirts.join(", ") || "–"],
     ["Incident Manager", docu.im || "–"],
-    ["Ansprechperson gegenüber dem CSIRT", [pr.haupt?.name, pr.haupt?.funktion].filter(Boolean).join(", ") || "–"],
+    ["Ansprechperson gegenüber dem CSIRT", pDesc(pers(pr, pr.stellen?.haupt?.p)).slice(0,2).join(", ") || "–"],
     ...(rep.portalId ? [["Incident-ID im Meldeportal", rep.portalId]] : [])
   ];
   const acts = sortedActions().filter(a=>["Entscheidung","Maßnahme","Meldung an Behörde oder CSIRT","Eskalation"].includes(a.typ)).slice(-6);
@@ -2775,16 +3096,86 @@ async function saveExecToFolder(){
     if(st) st.textContent = `Abgelegt als ${DATA_DIR}/vorfaelle/${incId}/${file}`;
   }catch(e){ if(st) st.textContent = e?.code==="exists" ? "Eine Datei mit diesem Zeitstempel gibt es schon; in einer Minute erneut versuchen." : writeErr(e); }
 }
-/* Drucken: nur die Zusammenfassung, als eigener Knoten direkt unter body */
-function printExec(){
-  const p=$("execprev"); if(p) p.innerHTML = execDocHTML();
+/* Drucken: nur das Dokument, als eigener Knoten direkt unter body */
+function printRoot(html){
   let root = $("printroot"); if(!root){ root = document.createElement("div"); root.id = "printroot"; document.body.appendChild(root); }
-  root.innerHTML = execDocHTML().replace('id="execdoc"', 'id="execdoc-print"');
+  root.innerHTML = html;
   document.body.classList.add("print-exec");
   const done = ()=>{ document.body.classList.remove("print-exec"); root.innerHTML = ""; removeEventListener("afterprint", done); };
   addEventListener("afterprint", done);
   window.print();
 }
+function printExec(){
+  const p=$("execprev"); if(p) p.innerHTML = execDocHTML();
+  printRoot(execDocHTML().replace('id="execdoc"', 'id="execdoc-print"'));
+}
+
+/* =====================================================================
+   Bericht zum Drucken oder als PDF: Vorfall oder Checkliste ohne Vorfall
+   Gleiche Inhalte wie das Protokoll, gegliedert für A4.
+   ===================================================================== */
+function printDocHTML(){
+  const isInc = view==="incident" && !!inc;
+  const res = cur.startsWith("r_") ? cur : null, r = res ? R[res]() : null;
+  const hits = path.filter(p=>isCrit(p.id) && p.ans==="Ja"), cf = conflict(), open = path.filter(p=>p.unclear), rest = remaining();
+  const kv = rows => `<dl class="kv">${rows.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${v}</dd>`).join("")}</dl>`;
+  const sec = (h, body) => body ? `<section><h4>${h}</h4>${body}</section>` : "";
+  const now = fmt(new Date()), org = profile?.name || "";
+  const vi = isInc && viewVersion ? versions.find(v=>v.version===viewVersion) : null;
+  const verLine = isInc ? (viewVersion ? `Version ${viewVersion}${vi?.savedAt?" vom "+fmt(new Date(vi.savedAt)):""}${vi?.savedBy?", gespeichert von "+esc(vi.savedBy):""}${vi?.note?" – "+esc(vi.note):""}${dirty?", mit ungespeicherten Änderungen":""}` : "noch nicht gespeichert") : "";
+  const m = isInc ? execModel() : null;
+
+  const head = `${isInc && inc.uebung?`<p class="uebbar">${UEB} Übung – kein echter Vorfall</p>`:""}
+    <header class="eh"><span class="eyebrow">${isInc?"Vorfallbericht":"Prüfung der Meldepflicht"} · Vertraulich</span>
+      <h3>${esc(isInc ? inc.title||"Vorfall" : "Prüfung der Meldepflicht nach NISG 2026")}</h3>
+      <span class="ref">${[org && esc(org), "Stand "+now, verLine].filter(Boolean).join(" · ")}</span></header>`;
+  const verdict = `<div class="everdict"><span class="verdict">${r ? r.verdict : "Prüfung nicht abgeschlossen"}</span>${r?`<p><strong>${r.title}.</strong> ${isInc ? esc(m.autoLead) : r.lead.replace(" Diesen Zeitpunkt unten eintragen.", "")}</p>`:""}</div>`;
+  const why = [
+    hits.length ? `<p>Erfüllte Kriterien:</p><ul>${hits.map(p=>`<li>${noQ(val(node(p.id).short))} <span class="ref">${val(node(p.id).ref)}</span></li>`).join("")}</ul>` : "",
+    cf ? `<p>Widerspruch in den Antworten: ${conflictText(cf)}.</p>` : "",
+    open.length ? `<p>Offene Punkte:</p><ul>${open.map(p=>`<li>${noQ(val(node(p.id).short))}: ${assumeFor(p.id)}</li>`).join("")}</ul>` : "",
+    gnote ? `<p>Anmerkungen zum Ergebnis:</p><p class="pnote">${nl2br(gnote)}</p>` : ""
+  ].join("");
+  const facts = isInc ? kv([
+    ["Status", esc(STATUS[inc.status]||"In Bearbeitung")],
+    ["Vorfall erkannt", esc(fmt(TE))],
+    ["Erheblichkeit festgestellt", TF ? esc(fmt(TF)) : "–"],
+    ["Meldung übermittelt", TM ? esc(fmt(TM)) : "–"],
+    ["Incident Manager", esc(docu.im||"–")],
+    ["Dokumentationsverantwortliche/r", esc(docu.doku||"–")],
+    ["Interne Referenz", esc(docu.ref||"–")],
+    ["Weitere Beteiligte", docu.beteiligte ? nl2br(docu.beteiligte) : "–"]
+  ]) : "";
+  const fr = m?.fr.length ? `<ul class="efr">${m.fr.map(f=>`<li class="${f.done?"ok":f.over?"over":""}"><strong>${esc(f.label)}</strong><span>${esc(f.st)}</span></li>`).join("")}</ul>` : "";
+  const scope = kv([["Arten der Einrichtung", esc([...sel].map(id=>T[id].label).join(", ")||"–")], ["Geprüft nach", sel.size ? regText() : "–"]]);
+  const rows = path.map((p,i)=>`<tr><td>${i+1}</td><td>${val(node(p.id).short)}<span class="ref">${val(node(p.id).ref)}</span>${qnotes[p.id]?`<span class="pnote"><strong>Anmerkung:</strong> ${nl2br(qnotes[p.id])}</span>`:""}</td><td>${esc(p.ans)}</td></tr>`).join("");
+  /* Anmerkungen zu Fragen, die (noch) nicht beantwortet sind, etwa die gerade offene Frage */
+  const loose = order().filter(id=>qnotes[id] && !pe(id));
+  const looseHTML = loose.length ? `<p>Anmerkungen zu Fragen ohne Antwort:</p><ul>${loose.map(id=>`<li>${val(node(id).short)} <span class="ref">${val(node(id).ref)}</span><span class="pnote"><strong>Anmerkung:</strong> ${nl2br(qnotes[id])}</span></li>`).join("")}</ul>` : "";
+  const checklist = path.length ? `<table class="ptab"><thead><tr><th>Nr.</th><th>Frage und Fundstelle</th><th>Antwort</th></tr></thead><tbody>${rows}</tbody></table>${rest.length?`<p>Nicht beantwortet: ${rest.map(id=>val(node(id).short)).join("; ")}</p>`:""}${looseHTML}` : `<p>Noch keine Frage beantwortet.</p>${looseHTML}`;
+  const ra = isInc ? repSummary() : [];
+  const acts = isInc ? sortedActions() : [];
+  const mg = isInc && (mgmt.lage || mgmt.bedarf || mgmt.next) ? kv([...(mgmt.lage?[["Lage", nl2br(mgmt.lage)]]:[]), ...(mgmt.bedarf?[["Entscheidungsbedarf", nl2br(mgmt.bedarf)]]:[]), ...(mgmt.next?[["Nächstes Lage-Update", esc(fmt(new Date(mgmt.next)))]]:[])]) : "";
+  const basis = isInc
+    ? (vi && !dirty ? `Maßgeblich ist die gespeicherte Versionsdatei ${DATA_DIR}/vorfaelle/${esc(incId)}/${esc(vi.file)}${vi.hash?`, Prüfsumme der Daten (SHA-256) ${vi.hash}`:""}.`
+       : viewVersion ? "Der Bericht enthält ungespeicherte Änderungen. Maßgeblich ist die gespeicherte Versionsdatei im Vorfallordner." : "Der Vorfall ist noch nicht gespeichert.")
+    : "Ohne gespeicherten Vorfall erstellt; die Angaben sind nicht im Datenordner abgelegt.";
+  return `<article class="execdoc printdoc ${r?r.tone:""}" aria-label="${isInc?"Vorfallbericht":"Bericht zur Prüfung der Meldepflicht"}">
+    ${head}
+    ${verdict}
+    ${sec("Begründung", why)}
+    ${isInc ? `<div class="ecols">${sec("Eckdaten", facts)}${sec("Berichtspflichten", fr)}</div>` : ""}
+    ${isInc ? sec("Sachverhalt", `<p>${nl2br(inc.desc||"–")}</p>`) : ""}
+    ${sec("Prüfumfang", scope)}
+    ${sec("Checkliste", checklist)}
+    ${sec("Meldeangaben", ra.length ? kv(ra.map(e=>[e.label, nl2br(e.val)])) : "")}
+    ${sec("Aktionen", acts.length ? `<ul>${acts.map(a=>`<li><span class="ref">${a.ts?fmt(new Date(a.ts)):"–"} · ${esc(a.typ)}${a.wer?" · durch "+esc(a.wer):""}</span> ${nl2br(a.text||"")}</li>`).join("")}</ul>` : "")}
+    ${isInc && docu.weitere ? sec("Weitere Dokumentation", `<p>${nl2br(docu.weitere)}</p>`) : ""}
+    ${sec("Management", mg)}
+    <p class="note">${basis} Orientierungshilfe, ersetzt keine Rechtsberatung. Erstellt mit ${TOOL.name} ${TOOL.version} am ${now}.</p>
+  </article>`;
+}
+function printDoc(){ printRoot(printDocHTML()); }
 setInterval(refreshExec, 60000);
 
 /* =====================================================================
@@ -2873,25 +3264,184 @@ addEventListener("pagehide", ()=>{ if(view==="incident") releaseLock(); });
 /* =====================================================================
    Navigation in der Checkliste
    ===================================================================== */
-function go(ans, to){
-  path.push({id:cur, ans, unclear: ans==="Unklar"});
-  if(to==="NEXT") to = nextAfter(cur);
-  if(to==="EVAL") to = evaluate();
-  cur = to;
+/* Fragenfolge und Antwort der Auswahl der Arten für die gemeinsame Navigation */
+const order = () => ["qs","q1","q2",...seq()];
+const qsEntry = () => ({id:"qs", ans: selUnclear ? "Unklar" : selSummary(), unclear: selUnclear});
+/* gemeinsam: navigation */
+/* Navigation im Fragebogen: Springen und Zurückgehen löschen keine Antworten. path enthält je Frage höchstens eine Antwort,
+   geordnet nach der aktuellen Fragenfolge (order). Nach einer Antwort geht es zur nächsten Frage der Folge, nach der letzten
+   zur ersten offenen Frage oder zum Ergebnis. Abschließen geht, sobald jede Frage der Folge beantwortet ist.
+   Je Werkzeug: order (Fragenfolge), qsEntry (Antwort der Auswahl der Arten), qsReady, evaluate, pe, prevAns. */
+const openQs = () => order().filter(id=>!pe(id));
+/* Antworten nach der Folge ordnen; Antworten weggefallener Fragen als bisherige Antwort merken. Wiederholt, weil eine weggefallene
+   Antwort die Folge erneut ändern kann. */
+function tidy(){
+  for(let k=0; k<10; k++){
+    const s = order(), next = s.map(id=>pe(id)).filter(Boolean);
+    path.filter(p=>!s.includes(p.id)).forEach(p=>{ prevAns[p.id] = p.ans; });
+    const same = next.length===path.length && next.every((p, i)=>p===path[i]);
+    path = next; if(same) return;
+  }
 }
-function afterTypes(){
-  path.push({id:"qs", ans: selUnclear ? "Unklar" : selSummary(), unclear: selUnclear});
-  cur = "q1";
+function answer(entry){
+  const i = path.findIndex(p=>p.id===entry.id);
+  if(i>=0) path[i] = entry; else path.push(entry);
+  delete prevAns[entry.id];
+  tidy();
+  const s = order(), nxt = s[s.indexOf(entry.id)+1];
+  cur = nxt || openQs()[0] || evaluate();
 }
+const go = ans => answer({id:cur, ans, unclear: ans==="Unklar"});
+const afterTypes = () => answer(qsEntry());
+/* Verlassen der Auswahl der Arten ohne „Weiter“: geänderte Auswahl übernehmen, damit Folge und Antworten zusammenpassen */
+function leaveQs(){ if(cur==="qs" && qsReady() && pe("qs")){ path[path.indexOf(pe("qs"))] = qsEntry(); tidy(); } }
+const complete = () => qsReady() && !openQs().length;
+function jumpTo(id){ leaveQs(); cur = id; }
+function stepBack(){ const s = order(); jumpTo(cur.startsWith("r_") ? s[s.length-1] : s[Math.max(0, s.indexOf(cur)-1)]); }
+function finish(){ leaveQs(); cur = complete() ? evaluate() : !qsReady() ? "qs" : (openQs()[0] || cur); }
+/* ende gemeinsam */
 function scrollToCheck(){
   const c=$("check");
   if(c && c.getBoundingClientRect().top < 0) c.scrollIntoView({block:"start", behavior: reduceMotion() ? "auto" : "smooth"});
 }
 
 /* =====================================================================
+   Plausibilität der Eingaben
+   Unmögliche Werte werden abgelehnt, ungewöhnliche erst nach Bestätigung übernommen.
+   Der getippte Wert bleibt im Feld stehen; in den Zustand kommt nur der zuletzt angenommene.
+   Geladene Dateien werden nicht geprüft, das Datenformat bleibt unverändert.
+   ===================================================================== */
+const PL_SLACK = 10*60e3;    // Toleranz für abweichende Uhren
+let plRej = {};              // Feld-id → {raw, lvl:"A"|"R", msg}: abgelehnt oder Rückfrage offen
+let plOk = new Set();        // bestätigte Rückfragen „id|Wert“, nur für diese Sitzung
+let plTimer = {};
+let saveBlockMsg = "";       // Hinweis in der Speicherleiste nach einem blockierten Speichern
+const PL_IDS = {te:"te", "inc-te":"te", "ni-te":"te", tf:"tf", "inc-tf":"tf", "ni-tf":"tf", tm:"tm",
+  "rep-beginn":"beginn", "rep-behoben":"behoben", "rep-wrErkannt":"wrErkannt", "mg-next":"next", "act-ts":"act", "ae-ts":"act",
+  "pf-registriert":"registriert", "pf-umsatz":"umsatz", "pf-nutzer":"nutzer"};
+const plKey = el => PL_IDS[el.id] || (/^pf-personen-\d+-(email|tel)$/.exec(el.id)||[])[1];
+const PL_PAST = new Set(["te","tf","tm","beginn","behoben","wrErkannt","act","registriert"]);
+/* Reihenfolge der Zeitpunkte: [früher, später, Stufe, Meldung am späteren Feld, Meldung am früheren Feld] */
+const PL_ORDER = [
+  ["te","tf","A","Die Erheblichkeit kann nicht vor der Erkennung des Vorfalls festgestellt werden. Die Fristen laufen ab der Feststellung (ErwGr 31 DVO).","Die Erkennung kann nicht nach der Feststellung der Erheblichkeit liegen."],
+  ["te","tm","A","Die Meldung kann nicht vor der Erkennung des Vorfalls übermittelt worden sein.","Die Erkennung kann nicht nach der Übermittlung der Meldung liegen."],
+  ["beginn","te","A","Die Erkennung kann nicht vor dem Beginn des Vorfalls liegen (Meldeangaben).","Der Vorfall kann nicht nach seiner Erkennung begonnen haben."],
+  ["beginn","behoben","A","Der Vorfall kann nicht vor seinem Beginn behoben worden sein.","Der Beginn kann nicht nach der Behebung liegen."],
+  ["tf","tm","R","Die Meldung liegt vor der Feststellung der Erheblichkeit. Stimmt das, etwa bei einer vorsorglichen Frühwarnung?","Die Feststellung liegt nach der Übermittlung der Meldung. Stimmt das, etwa bei einer vorsorglichen Frühwarnung?"],
+  ["te","behoben","R","Der Vorfall wäre vor seiner Erkennung behoben worden. Stimmt das?", null],
+  ["te","wrErkannt","R","Der Zeitpunkt liegt vor der Erkennung des Vorfalls. Bitte prüfen.", null],
+  ["te","act","R","Die Aktion liegt vor der Erkennung des Vorfalls. Für die Vorgeschichte ist das möglich, bitte bestätigen.", null]
+];
+const plA = msg => ({lvl:"A", msg}), plR = msg => ({lvl:"R", msg});
+const plMin = d => Math.floor(+d/60e3);   // Vergleich auf die Minute, wie im Eingabefeld
+const plDate = (key, v) => v ? new Date(key==="registriert" ? v+"T00:00" : v) : null;
+function plCtx(el){
+  if(el.id.startsWith("ni-")) return {te:plDate("te", $("ni-te")?.value), tf:plDate("tf", $("ni-tf")?.value), uebung:!!$("ni-uebung")?.checked};
+  const d = k => rep[k] ? new Date(rep[k]) : null;
+  return {te:TE, tf:TF, tm:TM, beginn:d("beginn"), behoben:d("behoben"), uebung:!!inc?.uebung};
+}
+function plWhen(key, d, c){
+  if(!d || isNaN(d)) return null;
+  const now = Date.now(), y = d.getFullYear();
+  if(y<2000 || y>new Date().getFullYear()+1) return plA("Das Jahr ist unplausibel. Bitte das Datum prüfen.");
+  if(PL_PAST.has(key) && +d > now+PL_SLACK) return plA(key==="registriert" ? "Die Registrierung kann nicht in der Zukunft liegen." : "Dieser Zeitpunkt liegt in der Zukunft.");
+  if(key==="te" && d < addMonth(new Date(), -36)) return plA("Der Vorfall wäre vor mehr als drei Jahren erkannt worden. Bitte das Datum prüfen.");
+  const hits = PL_ORDER.map(([a,b,lvl,mb,ma]) => key===b && c[a] && plMin(d)<plMin(c[a]) ? {lvl, msg:mb} : key===a && ma && c[b] && plMin(c[b])<plMin(d) ? {lvl, msg:ma} : null).filter(Boolean);
+  if(hits.length) return hits.find(h=>h.lvl==="A") || hits[0];
+  if(key==="te" && !c.uebung && +d < now-365*24*H) return plR("Der Vorfall wurde vor mehr als einem Jahr erkannt. Die Fristen nach § 34 Abs. 2 NISG 2026 sind dann lange abgelaufen. Bitte das Datum prüfen.");
+  if(key==="next" && +d < now) return plR("Das nächste Lage-Update liegt in der Vergangenheit.");
+  return null;
+}
+/* Beträge und Anzahlen: 8400000, 8.400.000, 8 400 000, 8.400.000,50; € davor oder danach ist erlaubt */
+function plNum(key, v){
+  const s = v.replace(/\s*€$/,"").replace(/^€\s*/,"");
+  if(s.includes("-")) return plA("Negative Werte sind nicht möglich.");
+  if(/[^\d.,\s]/.test(s)) return plA(`Bitte als Zahl ohne Abkürzung eingeben, z. B. ${key==="umsatz"?"8.400.000":"250.000"}.`);
+  if(!/^(\d+|\d{1,3}(\.\d{3})+|\d{1,3}(\s\d{3})+)(,\d+)?$/.test(s)) return plA("Tausender mit Punkt trennen, Dezimalstellen mit Komma, z. B. 8.400.000,50.");
+  if(key==="nutzer" && s.includes(",")) return plA("Die Zahl der Nutzer ist eine ganze Zahl.");
+  const n = +s.replace(/[.\s]/g,"").replace(",",".");
+  if(key==="umsatz" && n>1e13) return plA("Der Umsatz ist unplausibel hoch. Bitte die Stellen prüfen.");
+  if(key==="nutzer" && n>8.5e9) return plA("Die Zahl übersteigt die Weltbevölkerung. Bitte die Stellen prüfen.");
+  if(n===0) return plR("Mit 0 rechnet das Werkzeug keine Schwelle aus. Ohne Angabe das Feld leer lassen.");
+  if(key==="umsatz" && n<10000) return plR("Der Umsatz ist sehr gering. Wurde er in Millionen oder Tausend eingegeben? Bitte den vollen Betrag in Euro eintragen.");
+  return null;
+}
+function plMail(v){
+  if(/[,;]/.test(v) || (v.match(/@/g)||[]).length>1) return plA("Je Person eine E-Mail-Adresse. Weitere Wege unter Notizen eintragen.");
+  if(!/^[^\s@]+@[^\s@.][^\s@]*\.[^\s@.]{2,}$/.test(v) || v.includes("..")) return plA("Bitte eine gültige E-Mail-Adresse eingeben, z. B. vorname.nachname@firma.at.");
+  return null;
+}
+function plTel(v){
+  if(/[^\d\s+\/\-()]/.test(v)) return plA("Nur Ziffern, Leerzeichen und + / - ( ) verwenden. Hinweise zur Erreichbarkeit unter Notizen eintragen.");
+  const n = (v.match(/\d/g)||[]).length;
+  if(n<6 || n>15) return plA("Die Telefonnummer ist zu kurz oder zu lang.");
+  return null;
+}
+function plEval(el){
+  const key = plKey(el), v = (el.value||"").trim();
+  if(!key || !v) return null;
+  if(el.type==="datetime-local" || el.type==="date") return plWhen(key, plDate(key, v), plCtx(el));
+  if(key==="umsatz" || key==="nutzer") return plNum(key, v);
+  return key==="email" ? plMail(v) : key==="tel" ? plTel(v) : null;
+}
+const plPass = el => { const r = plEval(el); return !r || (r.lvl==="R" && plOk.has(el.id+"|"+el.value)); };
+/* Vor jeder Übernahme: true übernehmen, false abgelehnt oder Rückfrage offen */
+function plGate(el){
+  if(!plKey(el)) return true;
+  if(!plPass(el)){ plRej[el.id] = {raw:el.value, ...plEval(el)}; plShow(el.id); return false; }
+  if(plRej[el.id]){ delete plRej[el.id]; plShow(el.id, true); }
+  if(Object.keys(plRej).length) setTimeout(plRecheck);
+  if(saveBlockMsg) saveBlockMsg = plBlock(id=>!id.startsWith("pf-")) || "";
+  return true;
+}
+/* Nach einer anderen Änderung: passende Felder übernehmen (etwa Feststellung nach korrigierter Erkennung), bei den übrigen die Meldung nachführen */
+function plRecheck(){
+  Object.keys(plRej).forEach(id=>{ const el=$(id); if(!el) return;
+    if(plPass(el)) el.dispatchEvent(new Event("input", {bubbles:true}));
+    else { const r = plEval(el); if(r.msg!==plRej[id].msg){ plRej[id] = {raw:el.value, ...r}; plShow(id, true); } } });
+}
+/* Meldung am Feld; ohne now kurz verzögert, damit sie beim Tippen nicht flackert */
+function plShow(id, now){
+  clearTimeout(plTimer[id]);
+  const r = plRej[id];
+  if(r && !now){ plTimer[id] = setTimeout(()=>plShow(id, true), 700); return; }
+  const el = $(id), host = el?.closest("label"); if(!host) return;
+  let m = $(id+"-perr");
+  if(!r){ m?.remove(); el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby"); el.classList.remove("pl-r"); return; }
+  if(!m){ m = document.createElement("span"); m.id = id+"-perr"; m.setAttribute("role","alert"); host.append(m); }
+  m.className = r.lvl==="A" ? "perr" : "perr ask";
+  m.innerHTML = esc(r.msg) + (r.lvl==="R" ? ` <button type="button" class="link" data-plok="${esc(id)}">Wert trotzdem übernehmen</button>` : "");
+  el.setAttribute("aria-invalid","true"); el.setAttribute("aria-describedby", m.id); el.classList.toggle("pl-r", r.lvl==="R");
+}
+/* Nach dem Neuaufbau eines Bereichs: getippte Werte und Meldungen wieder anzeigen; verschwundene Felder zählen nicht mehr */
+function plRestore(){
+  Object.entries(plRej).forEach(([id,r])=>{ const el=$(id); if(!el){ delete plRej[id]; return; } if(el.value!==r.raw) el.value = r.raw; plShow(id, true); });
+}
+function plDrop(...ids){ ids.forEach(id=>{ if(plRej[id]){ delete plRej[id]; plShow(id, true); } }); }
+function plReset(){ Object.values(plTimer).forEach(clearTimeout); plRej = {}; plTimer = {}; saveBlockMsg = ""; }
+function plLabel(el){
+  const l = el.closest("label"), t = l ? [...l.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join(" ").replace(/\s+/g," ").trim() : el.id;
+  const p = /^pf-personen-(\d+)-/.exec(el.id), x = p && pdraft?.personen?.[+p[1]];
+  return p ? `${t} bei ${x?.name?.trim() || "Person "+(+p[1]+1)}` : t;
+}
+/* Hinweis, wenn im Bereich Angaben nicht übernommen sind; leer, wenn alles passt */
+function plBlock(pred){
+  const ids = Object.keys(plRej).filter(id=>pred(id) && $(id));
+  if(!ids.length) return "";
+  return `Nicht gespeichert: ${ids.length===1?"Eine Angabe ist":`${ids.length} Angaben sind`} nicht übernommen (${ids.map(id=>plLabel($(id))).join(", ")}). Bitte korrigieren oder bestätigen.`;
+}
+const plFirst = pred => { const id = Object.keys(plRej).find(id=>pred(id) && $(id)); if(id){ plShow(id, true); $(id).focus(); } };
+/* Formulare mit Absenden: Felder prüfen, auch wenn sie nie geändert wurden */
+function plForm(ids, st){
+  for(const id of ids){ const el=$(id); if(el && !plGate(el)){ plShow(id, true); st.textContent = `Bitte die markierte Angabe prüfen: ${plLabel(el)}.`; el.focus(); return false; } }
+  return true;
+}
+
+/* =====================================================================
    Ereignisse
    ===================================================================== */
-const PREP_ADD = {usp:{rolle:"Vertretung"}, approvals:{aktion:"informieren", zeitpunkt:"vor-fw"}};
+const PREP_ADD = {meldeportal:emptySlot(), freigaben:{...emptySlot(), aktion:"informieren", zeitpunkt:"vor-fw"}, stellenWeitere:{bez:"", ...emptySlot(), hinweis:""}, ansprech:{p:""}, empfaenger:{bez:"", art:"", dienst:"", daten:"", anzahl:"", prio:"", kanal:"", quelle:"", kontakt:"", ...emptySlot(), hinweis:""}};
+const emptyPerson = () => ({id:newPid(), name:"", org:"", funktion:"", email:"", tel:"", notiz:""});
 document.addEventListener("click", e=>{
   // Sprungmarken auf der Seite (z. B. Impressum in der Fußzeile): zugeklappte Hinweise öffnen, Adresse der Seite bleibt unverändert
   const a = e.target.closest('a[href^="#"]');
@@ -2902,6 +3452,7 @@ document.addEventListener("click", e=>{
     t.scrollIntoView({block:"start"}); return;
   }
   const b = e.target.closest("button"); if(!b || b.type==="submit") return;
+  if(b.dataset.plok){ const el=$(b.dataset.plok); if(el){ plOk.add(el.id+"|"+el.value); el.dispatchEvent(new Event("input", {bubbles:true})); el.focus(); } return; }
   // Speichern und Navigation
   if(b.id==="save-inc"){ saveIncident(); return; }
   if(b.id==="cancel-go"){ pendingNav=null; renderSavebar(); return; }
@@ -2938,11 +3489,12 @@ document.addEventListener("click", e=>{
   if(b.id==="exec-dl"){ downloadText(`${incId}_Executive-Summary.txt`, execText()); return; }
   if(b.id==="exec-save"){ saveExecToFolder(); return; }
   if(b.id==="exec-print"){ printExec(); return; }
+  if(b.id==="doc-print" || b.id==="doc-print-head"){ printDoc(); return; }
   if(b.id==="rep-dl" && rtype){ downloadText(`${incId}_Meldetext_${slug(RTYPES[rtype].name)}.txt`, reportText(rtype).text); return; }
   if(b.dataset.rtype){ rtype = b.dataset.rtype; repOpen = true; renderRep(); return; }
   if(b.id==="krit-sug"){ applyKrit(); renderRepForm(); refreshRtext(); markDirty(); return; }
   if(b.id==="tf-now"){
-    TF = nowMin();
+    TF = nowMin(); plDrop("inc-tf","tf");
     if(view==="incident"){
       actions.push({id:newActId(), ts:TF.toISOString(), typ:"Entscheidung", text:"Erheblichkeit festgestellt. Ab diesem Zeitpunkt laufen die Meldefristen.", wer:userName||docu.doku||""});
       const f=$("inc-tf"); if(f) f.value = toLocalInput(TF);
@@ -2951,18 +3503,22 @@ document.addEventListener("click", e=>{
     refreshSteps(); return;
   }
   // Aktionen
-  if(b.dataset.delact){ actions = actions.filter(a=>a.id!==b.dataset.delact); renderActs(); markDirty(); return; }
+  if(b.dataset.editact){ actEdit = b.dataset.editact; renderActs(); $("ae-text")?.focus(); return; }
+  if(b.dataset.actcancel){ const id = actEdit; actEdit = null; renderActs(); document.querySelector(`[data-editact="${CSS.escape(id||"")}"]`)?.focus(); return; }
+  if(b.dataset.delact){ if(actEdit===b.dataset.delact) actEdit = null; actions = actions.filter(a=>a.id!==b.dataset.delact); renderActs(); markDirty(); return; }
   // Vorbereitung: Zeilen
-  if(b.dataset.add){ const k=b.dataset.add; pdraft[k]=(pdraft[k]||[]).concat([{...(PREP_ADD[k]||{})}]); pdirty=true; pstatus=""; render(); return; }
-  if(b.dataset.del){ const [k,i]=b.dataset.del.split("."); pdraft[k].splice(+i,1); pdirty=true; pstatus=""; render(); return; }
+  if(b.dataset.add){ const k=b.dataset.add; pdraft[k]=(pdraft[k]||[]).concat([k==="personen" ? emptyPerson() : clone(PREP_ADD[k])]); pdirty=true; pstatus=""; render(); if(k==="personen") $(`pf-personen-${pdraft.personen.length-1}-name`)?.focus(); return; }
+  if(b.dataset.del){ const [k,i]=b.dataset.del.split("."); if(k==="personen" && personUse(pdraft, pdraft.personen[+i]?.id).length) return; pdraft[k].splice(+i,1); if(k==="personen") plDrop(...Object.keys(plRej).filter(id=>id.startsWith("pf-personen-"))); pdirty=true; pstatus=""; render(); return; }
   // Checkliste
   if(!$("check")?.contains(b)) return;
   if(b.dataset.ans){ go(b.dataset.ans, b.dataset.to); }
-  else if(b.id==="back"){ const p = path.pop(); if(p) cur = p.id; }
-  else if(b.id==="reset"){ path=[]; cur="qs"; selUnclear=false; qnotes={}; gnote=""; sel=new Set(profile?.types?.filter(k=>T[k])||[]); }
+  else if(b.id==="back"){ stepBack(); }
+  else if(b.id==="finish"){ finish(); }
+  else if(b.id==="reset"){ path=[]; cur="qs"; prevAns={}; selUnclear=false; qnotes={}; gnote=""; sel=new Set(profile?.types?.filter(k=>T[k])||[]); }
   else if(b.id==="early"){ cur = evaluate(); }
   else if(b.id==="resume"){ const r=remaining(); cur = r[0] || "q10"; }
-  else if(b.dataset.jump!==undefined){ const i=+b.dataset.jump; cur = path[i].id; path = path.slice(0,i); }
+  else if(b.dataset.jumpq){ jumpTo(b.dataset.jumpq); }
+  else if(b.dataset.jump!==undefined){ const p = path[+b.dataset.jump]; if(p) jumpTo(p.id); }
   else return;
   renderCheck(); scrollToCheck(); markDirty();
   if(view==="incident"){ renderRepForm(); refreshRtext(); refreshExec(); }
@@ -2988,6 +3544,7 @@ document.addEventListener("toggle", e=>{
 }, true);
 document.addEventListener("change", e=>{
   const i=e.target;
+  if(plRej[i.id]){ plShow(i.id, true); return; }
   if(i.id==="st-import" && i.files?.length){ importFolder(i.files); return; }
   if(i.id==="ty-unclear"){ selUnclear=i.checked; refreshQs(); markDirty(); return; }
   if(i.closest("#typeform") && i.dataset.type){
@@ -2999,6 +3556,10 @@ document.addEventListener("change", e=>{
   }
   if(i.dataset.step){ if(i.checked) stepsDone[i.dataset.step]=new Date().toISOString(); else delete stepsDone[i.dataset.step]; refreshSteps(); markDirty(); return; }
   if(i.dataset.inc==="status"){ inc.status=i.value; markDirty(); return; }
+  if(i.dataset.ps!==undefined && i.value===NEWP){
+    const x = emptyPerson(); pdraft.personen = (pdraft.personen||[]).concat([x]); setPath(pdraft, i.dataset.pf, x.id); pdirty=true; pstatus=""; render();
+    const n = $(`pf-personen-${pdraft.personen.length-1}-name`); n?.scrollIntoView({block:"center"}); n?.focus(); return;
+  }
   if(i.dataset.pf && i.tagName==="SELECT"){ setPath(pdraft, i.dataset.pf, i.value); pdirty=true; updatePrepPreview(); return; }
   if(i.dataset.rep && i.type==="radio"){ rep[i.dataset.rep]=i.value; renderRepForm(); refreshRtext(); markDirty(); return; }
   if(i.dataset.repm){
@@ -3009,6 +3570,8 @@ document.addEventListener("change", e=>{
 });
 document.addEventListener("input", e=>{
   const i=e.target;
+  if(i.id==="act-ts") actTsEdited=true;
+  if(!plGate(i)) return;
   if(i.id==="te" || i.id==="inc-te"){ if(i.value){ TE=new Date(i.value); refreshSteps(); markDirty(); } return; }
   if(i.id==="tf" || i.id==="inc-tf"){ TF = i.value ? new Date(i.value) : null; refreshSteps(); markDirty(); return; }
   if(i.id==="tm"){ TM = i.value ? new Date(i.value) : null; refreshSteps(); markDirty(); return; }
@@ -3027,7 +3590,15 @@ document.addEventListener("input", e=>{
 });
 let prevTimer=null;
 function schedulePreview(){ clearTimeout(prevTimer); prevTimer=setTimeout(updatePrepPreview, 400); }
-function updatePrepPreview(){ const g=$("guideprev"); if(g) g.innerHTML = guideHTML(pdraft, pdraft.types||[], {}); const t=$("thrprev"); if(t) t.innerHTML = thrPreview(pdraft); const s=$("pstatus"); if(s && pdirty) s.textContent="Ungespeicherte Änderungen"; }
+function updatePrepPreview(){ const g=$("guideprev"); if(g) g.innerHTML = guideHTML(pdraft, pdraft.types||[], {}); const t=$("thrprev"); if(t) t.innerHTML = thrPreview(pdraft); const s=$("pstatus"); if(s && pdirty) s.textContent="Ungespeicherte Änderungen"; refreshPersons(); }
+/* Namen in den Auswahllisten und „Eingetragen bei“ nachführen, ohne das Formular neu aufzubauen */
+function refreshPersons(){
+  (pdraft?.personen||[]).forEach((x,i)=>{
+    const u = personUse(pdraft, x.id), e = $("pu-"+x.id); if(e) e.innerHTML = useText(u);
+    const d = document.querySelector(`[data-del="personen.${i}"]`); if(d) d.disabled = u.length>0;
+    document.querySelectorAll(`#prepform select[data-ps] option[value="${x.id}"]`).forEach(o=>{ o.textContent = pOpt(x); });
+  });
+}
 const writeErr = err => err?.name==="NotAllowedError" ? "Kein Schreibzugriff auf den Datenordner. Bitte den Ordner wieder verbinden." : "Speichern fehlgeschlagen. Ist der Datenordner noch erreichbar?";
 document.addEventListener("submit", async e=>{
   e.preventDefault();
@@ -3035,16 +3606,36 @@ document.addEventListener("submit", async e=>{
   if(f.id==="userform"){ setUserName($("user-name").value); editingUser=false; $("storebar").innerHTML = storageBar(); return; }
   if(f.id==="actform"){
     const text=$("act-text").value.trim(), ts=$("act-ts").value, st=$("actstatus");
+    if(!plForm(["act-ts"], st)) return;
     if(!text){ st.textContent="Bitte eine Beschreibung eingeben."; $("act-text").focus(); return; }
     actions.push({id:newActId(), ts: ts?new Date(ts).toISOString():new Date().toISOString(), typ:$("act-typ").value, text, wer:$("act-wer").value.trim()});
-    renderActs(); markDirty();
+    renderActs(true); markDirty();
     const s2=$("actstatus"); if(s2) s2.textContent="Erfasst. Mit „Speichern“ als neue Version sichern.";
+    return;
+  }
+  /* Gespeicherte Aktion berichtigen: Zeitpunkt, Art, Person, Beschreibung; frühere Versionen bleiben unverändert */
+  if(f.id==="acteditform"){
+    const a = actions.find(x=>x.id===f.dataset.act);
+    if(!a){ actEdit = null; renderActs(); return; }
+    const text=$("ae-text").value.trim(), ts=$("ae-ts").value, st=$("aestatus");
+    if(!ts){ st.textContent="Bitte einen Zeitpunkt angeben."; $("ae-ts").focus(); return; }
+    if(!plForm(["ae-ts"], st)) return;
+    if(!text){ st.textContent="Bitte eine Beschreibung eingeben."; $("ae-text").focus(); return; }
+    const neu = {typ:$("ae-typ").value, text, wer:$("ae-wer").value.trim()};
+    if((a.ts?toLocalInput(new Date(a.ts)):"")!==ts) neu.ts = new Date(ts).toISOString(); // Sekunden bleiben, wenn die Minute gleich ist
+    const changed = !!neu.ts || Object.keys(neu).some(k=>(a[k]||"")!==neu[k]);
+    if(changed){ Object.assign(a, neu, {geaendert:new Date().toISOString()}); markDirty(); }
+    actEdit = null; renderActs();
+    document.querySelector(`[data-editact="${CSS.escape(a.id)}"]`)?.focus();
+    const s2=$("actstatus"); if(s2) s2.textContent = changed ? "Geändert. Mit „Speichern“ als neue Version sichern." : "Keine Änderung.";
     return;
   }
   if(f.id==="typeform"){ if(!qsReady()) return; afterTypes(); renderCheck(); scrollToCheck(); markDirty(); return; }
   if(f.id==="prepform"){
     const st=$("pstatus");
     if(!storeReady){ st.textContent = "Zum Speichern zuerst oben einen Datenordner wählen."; return; }
+    const pb = plBlock(id=>id.startsWith("pf-"));
+    if(pb){ st.textContent = pb; plFirst(id=>id.startsWith("pf-")); return; }
     st.textContent="Speichert …";
     try{
       const r = await saveProfile(pdraft);
@@ -3059,6 +3650,7 @@ document.addEventListener("submit", async e=>{
     const st=$("nistatus");
     if(!storeReady){ st.textContent = "Zum Speichern zuerst oben einen Datenordner wählen."; return; }
     if(!title){ st.textContent="Bitte eine Bezeichnung eingeben."; $("ni-title").focus(); return; }
+    if(!plForm(["ni-te","ni-tf"], st)) return;
     resetCheck(true);
     TE = te ? new Date(te) : nowMin(); TF = tf ? new Date(tf) : null;
     const now = new Date();
@@ -3066,7 +3658,9 @@ document.addEventListener("submit", async e=>{
     inc = {title, desc, status:"offen", uebung:ueb};
     const im=$("ni-im")?.value.trim(), dk=$("ni-doku")?.value.trim(), wer = userName||dk||im||"";
     if(im) docu.im=im; if(dk) docu.doku=dk;
-    actions.push({id:newActId(), ts:TE.toISOString(), typ:"Neue Information", text: ueb ? "Übungsvorfall angelegt. Vorfall erkannt." : "Vorfall erkannt, Vorfall angelegt.", wer});
+    // Erkennung und Anlage getrennt: erkannt wird oft früher, und nicht unbedingt von der Person, die anlegt
+    actions.push({id:newActId(), ts:TE.toISOString(), typ:"Neue Information", text:"Vorfall erkannt.", wer:""});
+    actions.push({id:newActId(), ts:now.toISOString(), typ:"Sonstiges", text: ueb ? `Übungsvorfall im ${TOOL.name} angelegt.` : `Vorfall im ${TOOL.name} angelegt.`, wer});
     if(TF) actions.push({id:newActId(), ts:TF.toISOString(), typ:"Entscheidung", text:"Erheblichkeit festgestellt. Ab diesem Zeitpunkt laufen die Meldefristen.", wer});
     st.textContent="Wird angelegt …";
     const state = incState();
@@ -3104,7 +3698,7 @@ const OV = [
     {id:"c_access", regs:["NISV","DVO"], short:"Böswilliger Zugriff mit schwerer Störung?", ref:"§ 5 Abs. 1 Z 5 NISV: wahrscheinlich · Art. 3 Abs. 1 lit. e DVO: geeignet"},
     {id:"t", regs:["DVO"], short:"Kriterien der gewählten DVO-Arten", ref:"Art. 5 bis 14 iVm Art. 3 Abs. 1 lit. g DVO", extra:`<details class="etd"><summary>Kriterien je Art anzeigen</summary>${TYPES.filter(t=>t.g==="dvo").map(t=>`<p><strong>${t.label}</strong> <span class="ref">${litRef(t)} DVO</span></p><ol type="a">${t.crit.map(c=>`<li>${c}</li>`).join("")}</ol>`).join("")}</details>`},
     {id:"c_outage", regs:["NISV"]},
-    {id:"c_crisis", regs:["NISV"]},
+    {id:"c_crisis", regs:["NISV"], extra:`<p class="note">Ausfall über 24 Stunden und Krisenmanagement fragt das Werkzeug auch bei Einrichtungen, die nur unter die DVO fallen.</p>`},
     {id:"c_repeat", regs:["NISV","DVO"], ref:"§ 7 NISV: gleiche Ursache und Auswirkung · Art. 4 DVO: gleiche Ursache"}]},
   {stage:3, items:[{id:"q10", br:[["Ja","r_report"],["Nein","r_no"],["Unklar","r_unclear"]], extra:`<p class="note">Erst nach dieser Frage steht das Ergebnis fest. Die Checkliste wird immer vollständig durchlaufen, auch wenn ein Kriterium schon früher erfüllt ist. Reihenfolge der Bewertung: nur Finanzsektor, kein Vorfall, planmäßige Wartung, dann mindestens ein erfülltes Kriterium (meldepflichtig), dann offene Kriterien (Frühwarnung empfohlen), sonst nicht meldepflichtig. Ist „kein Vorfall“ oder „planmäßig“ angegeben und zugleich ein Kriterium erfüllt, widersprechen die Antworten einander; bis zur Korrektur ist eine Frühwarnung empfohlen. Sind nur die Fragen der Stufe 2 offen und kein Kriterium erfüllt oder offen, bleibt es bei „nicht meldepflichtig“.</p>`}]}
 ];

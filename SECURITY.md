@@ -14,4 +14,4 @@ Bitte keine echten Vorfalldaten und keine personenbezogenen Daten mitsenden.
 
 ## Unterstützte Version
 
-Korrekturen gibt es für die jeweils aktuelle Version. Aktuell ist Version 1.1.1 vom 18.10.2026.
+Korrekturen gibt es für die jeweils aktuelle Version. Aktuell ist Version 1.2.0 vom 23.10.2026.

@@ -11,7 +11,7 @@ Das Werkzeug ist eine einzelne HTML-Datei. Es läuft vollständig lokal im Brows
 - Online ausprobieren, ohne Download: https://nisg-meldekompass.at/demo/
 - Alle Versionen: https://github.com/edertho/nisg-meldekompass/releases
 
-Aktuelle Version 1.1.1 vom 18.10.2026.
+Aktuelle Version 1.2.0 vom 23.10.2026.
 
 ## Verwenden
 

@@ -13,4 +13,4 @@ Organisation darf ihn nutzen, auch gewerblich und ohne Registrierung.
   Prüfung des Einzelfalls.
 - Rechteinhaber ist Thomas Eder.
 
-Version 1.1.1, Stand 18.10.2026. © 2026 Thomas Eder
+Version 1.2.0, Stand 23.10.2026. © 2026 Thomas Eder
